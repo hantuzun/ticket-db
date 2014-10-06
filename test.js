@@ -8,12 +8,14 @@ http.createServer(function (req, res) {
 console.log('Server running at http://127.0.0.1:1337/');
 
   var pg = require('pg'); 
-// var client = new pg.Client({
-// 	host:'ticketdb.cs08b6d209wu.us-west-2.rds.amazonaws.com',
-// 	user:'masterlogin',
-// 	password: 'masterpass',
-// 	port: '5432'});
-var client = new pg.Client("tcp://masterlogin@ticketdb.cs08b6d209wu.us-west-2.rds.amazonaws.com:5432/ticketdb");
+  var client = new pg.Client(
+	{
+ 	host:'ticketservice.cs08b6d209wu.us-west-2.rds.amazonaws.com',
+ 	user:'masterlogin',
+ 	password: 'masterpass',
+ 	port: '5432'
+	});
+//var client = new pg.Client("tcp://masterlogin@ticketdb.cs08b6d209wu.us-west-2.rds.amazonaws.com:5432/ticketdb");
 
 
 client.connect(
