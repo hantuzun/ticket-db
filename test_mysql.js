@@ -1,30 +1,22 @@
 
-console.log("console prints to here");
-var http = require('http');
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
-}).listen(1337, '127.0.0.1');
-console.log('Server running at http://127.0.0.1:1337/');
-
-  var pg = require('pg'); 
-  var client = new pg.Client(
-	{
- 	host:'ticketservice.cs08b6d209wu.us-west-2.rds.amazonaws.com',
- 	user:'masterlogin',
- 	password: 'masterpass',
- 	port: '5432'
-	});
-//var client = new pg.Client("tcp://masterlogin@ticketdb.cs08b6d209wu.us-west-2.rds.amazonaws.com:5432/ticketdb");
-
+var mysql = require('mysql'); 
+var client = mysql.createConnection(
+        {
+        host:'ticketdb.cs08b6d209wu.us-west-2.rds.amazonaws.com',
+        user:'masterlogin',
+        password: 'masterpass',
+        port: 3306,
+        database: 'ticketdb'
+        //ssl: true
+        });
 
 client.connect(
     function (err) { 
     	if (err){
-    		console.log("connection error");
+    		console.log("connection error", err);
     	}
         else if (!err) {
-            return client.query (
+            /*return client.query (
                 "create table b (id integer, txt text);", 
                 function (err, res) { 
                     if (! err) { 
@@ -33,15 +25,15 @@ client.connect(
                         return "created";
                     }
                 }
-            );
+            );*/
         }
     }
 );
-
+/*
 client.connect(
     function (err) { 
         if (err) { 
-            return console.error("error inserting!"); 
+            return console.error("error inserting!", err); 
         } 
         else { 
             return client.query(
@@ -64,7 +56,7 @@ client.connect(
 client.connect(
     function (err) { 
         if (err) { 
-            return console.error("retrieval failed!"); 
+            return console.error("retrieval failed!", err); 
         } 
         else { 
             return client.query(
@@ -82,4 +74,4 @@ client.connect(
             ); 
         } 
     } 
-); 
+); */
