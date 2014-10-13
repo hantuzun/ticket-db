@@ -6,11 +6,10 @@ http.createServer(
 		console.log('Receving request...');
 		var callback = function(err, result) {
 			res.writeHead(200, {'Content-Type' : 'x-application/json'});
-			console.log('json:', result);
+			//console.log('json:', result);
 			res.end(result);
 		};
-	parseJSON(
-    //getSQL(callback);
+    getSQL(callback);
 	}
 ).listen(3000); //port #
 
@@ -27,7 +26,7 @@ function getSQL(callback) {
 	);
     client.connect();
 	
-    var query = 'SELECT * FROM artists';
+    var query = 'SELECT * FROM events';
     client.query(query, 
 		function(err, results, fields) {
 			if (err)
