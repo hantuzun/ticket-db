@@ -7,7 +7,7 @@ app.get('/', function(req, res){
 });
 
 //REGISTRATION
-app.get('/register', function(req, res){
+app.post('/register', function(req, res){
 	var p = req.params;
 	var reg = registerUser(p.email, p.username, p.passhash, p.firstname, p.lastname);
 	if (reg == true){
@@ -23,6 +23,11 @@ app.get('/login', function(req, res){
 	var p = req.params;
 	var login = performLogin(p.email, p.passhash);
 	if (login == true){
+		if (isAdmin(p.email, p.passhash)) {
+			res.locals.role = 'admin';
+		} else {
+			res.locals.role = 'user';
+		}
 		res.render('registration-completed');
 	}
 	else {
@@ -33,13 +38,13 @@ app.get('/login', function(req, res){
 //SEARCH
 app.get('/search', function(req, res){
 	var p = req.params;
-	var login = searchDB(p.table, ...);
-	if (login == true){
-		res.render('login-completed');
+	var search = searchDB(p.table, ..., p.role);
+	if (search == true){
+		res.render('search-results');
 	}
 	else {
-		res.locals.reason = login;
-		res.render('login-failed')
+		res.locals.reason = search;
+		res.render('search-failed')
 });
 
 /*********************/
@@ -49,9 +54,21 @@ http.createServer(app).listen(80);
 /*********************/
 
 function registerUser(email, username, passhash, firstname, lastname) {
+	//stuff
 	return true;
 }
 
 function performLogin(email, passhash) {
+	//stuff
 	return true;
+}
+
+function searchDB(....) {
+	var admin = (role == 'admin');
+	if (table == 'users' || table == 'tickets') {
+		if (!admin) {
+			return false;
+		} else {
+			//...
+	}
 }
