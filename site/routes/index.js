@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var router = express.Router();
 var bodyParser = require('body-parser');
-//router.use(bodyParser.json());
+
 app.use(bodyParser.json());
 
 /* GET home page. */
@@ -21,7 +21,7 @@ router.get('/profile',function(req,res){
 });
 
 /*GET sign up page*/
-router.get('/signUp',function(req,res){
+router.get('/register',function(req,res){
 	res.render('signUp');
 });
  
