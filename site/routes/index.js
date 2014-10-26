@@ -4,6 +4,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res) {
+  //var elem = document.getElementById('hideThis');
+  //elem.style.display = 'none';	
   res.render('home', { title: 'Eventss Database' });
 });
 
