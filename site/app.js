@@ -5,14 +5,17 @@ var path = require('path');
 var routes = require('./routes/index');
 //mysql file:
 var mdb = require('./mdb');
-var session = require('cookie-session')
+var session = require('cookie-session');
+var bodyParser = require('body-parser');
 var app = express();
- 
 
-app.use(express.cookieSession());
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
 app.use('/',routes);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true}));
 
 
 
@@ -41,18 +44,15 @@ app.post('/loginForm',function(req,res){
 //SUBMIT REGISTRATION INFO
 app.post('/registrationForm',function(req,res){
 	var p = req.body;
+	var reg = mdb.registerUser(p.email, p.username, p.password, p.firstname, p.lastname);
 	
-	var callback = function(status, result) {
-		if (status == true){
-			res.render('home');
-		}
-		else {
-			res.locals.reason = result;
-			res.render('//////////////////////')
-		}
-	};
-	
-	mdb.registerUser(p.email, p.username, p.password, p.firstname, p.lastname, callback);
+	if (reg == true){
+		res.render('home');
+	}
+	else {
+		res.locals.reason = reg;
+		res.render('//////////////////////')
+	}
 });
 
 //SEARCH
