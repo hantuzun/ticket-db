@@ -30,29 +30,24 @@ function search(role, table, targets, filters) {
 
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
-	var status, result;
 
 	client.connect(function(err) {
 		if (err){
-			status = false;
-			result = err;
+			callback(false, err);
 		}
 	});
 
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
-				status = true;
-				result = res;
+				client.end();
+				callback(true, res);
 			} else {
-				status = false;
-				result = err;
+				client.end();
+				callback(false, err);
 			}
 		}
 	);
-
-	client.end();
-	callback(status, result);
 }
 
 module.exports.registerUser = registerUser;

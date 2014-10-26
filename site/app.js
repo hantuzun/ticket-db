@@ -14,8 +14,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
 app.use('/',routes);
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 
 
@@ -34,7 +33,7 @@ app.post('/loginForm',function(req,res){
 			res.render('home');
 		} else {
 			res.locals.reason = result;
-			res.send('///////////////////////'); //alert message, not new page
+			res.send('login not found'); //alert message, not new page
 		}
 	};
 
@@ -44,29 +43,34 @@ app.post('/loginForm',function(req,res){
 //SUBMIT REGISTRATION INFO
 app.post('/registrationForm',function(req,res){
 	var p = req.body;
-	var reg = mdb.registerUser(p.email, p.username, p.password, p.firstname, p.lastname);
-	
-	if (reg == true){
-		res.render('home');
-	}
-	else {
-		res.locals.reason = reg;
-		res.render('//////////////////////')
-	}
+
+	var callback = function(status, result) {
+		if (status == true) {
+			res.render('home');
+		} else {
+			res.locals.reason = result;
+			console.log(result);
+			res.send('reg failed');
+		}
+	};
+
+	mdb.registerUser(p.email, p.password, p.firstname, p.lastname, callback);
 });
 
 //SEARCH
 app.get('/search', function(req, res){
 	var p = req.body;
-	var searchRes = mdb.search(p.role, p.table, p.targets, p.filers);
-	
-	if (searchRes == true){
-		res.render('search-results');
-	}
-	else {
-		res.locals.reason = searchRes;
-		res.render('search-failed')
-	}
+
+	var callback = function(status, result) {
+		if (status == true){
+			res.render('search-results');
+		} else {
+			res.locals.reason = result;
+			res.send('search-failed');
+		}
+	};
+
+	mdb.search(p.role, p.table, p.targets, p.filers, callback);
 });
 
 function isAdmin(u, p) {
