@@ -8,8 +8,8 @@ var session = require('cookie-session')
 router.get('/', function(req, res) {
   //var elem = document.getElementById('hideThis');
   //elem.style.display = 'none';	
- var username = req.session.username;
-  res.render('home', { title: 'Eventss Database '+username });
+ //var username = req.session.username;
+  res.render('home', { title: 'Eventss Database '});
 });
 
 /* GET login page. */

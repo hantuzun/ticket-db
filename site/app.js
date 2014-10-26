@@ -5,14 +5,17 @@
  var routes = require('./routes/index');
  //mysql file:
  var mdb = require('./mdb');
- var session = require('cookie-session')
+ var session = require('cookie-session');
+ var bodyParser = require('body-parser');
  var app = express();
  
 
-app.use(express.cookieSession());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
 app.use('/',routes);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true}));
 
 
 
@@ -30,7 +33,7 @@ app.post('/loginForm',function(req,res){
 			}
 			res.render('home');
 		} else {
-			res.locals.reason = login;
+			res.locals.reason = result;
 			res.send('///////////////////////'); //alert message, not new page
 		}
 	};
