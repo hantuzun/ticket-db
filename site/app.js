@@ -3,12 +3,12 @@ module.exports = app;
 var express = require('express');
 var path = require('path');
 var routes = require('./routes/index');
-//mysql file:
-var mdb = require('./mdb');
+
+var mdb = require('./mdb'); //mysql file
 var session = require('cookie-session');
 var bodyParser = require('body-parser');
-var app = express();
 
+var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
@@ -23,7 +23,7 @@ app.post('/loginForm',function(req,res){
 	var p = req.body;
 
 	var callback = function(status, result) {
-		if (status == true && result.length == 1) { //found in table
+		if (status == true && result.length == 1) {
 			req.session.username = p.email;
 			if (isAdmin(p.email, p.password)) {
 				res.session.role = 'admin';
@@ -33,7 +33,7 @@ app.post('/loginForm',function(req,res){
 			res.render('home');
 		} else {
 			res.locals.reason = result;
-			res.send('login not found'); //alert message, not new page
+			res.send('login not found');  //TODO: alert
 		}
 	};
 
@@ -49,8 +49,7 @@ app.post('/registrationForm',function(req,res){
 			res.render('home');
 		} else {
 			res.locals.reason = result;
-			console.log(result);
-			res.send('reg failed');
+			res.send('reg failed');  //TODO: alert
 		}
 	};
 
@@ -58,23 +57,39 @@ app.post('/registrationForm',function(req,res){
 });
 
 //SEARCH
-app.get('/search', function(req, res){
+app.post('/search', function(req, res){
 	var p = req.body;
 
 	var callback = function(status, result) {
-		if (status == true){
+		if (status == true) {
 			res.render('search-results');
 		} else {
 			res.locals.reason = result;
-			res.send('search-failed');
+			res.send('search-failed');  //TODO: alert?
 		}
 	};
 
-	mdb.search(p.role, p.table, p.targets, p.filers, callback);
+	mdb.search(p.table, p.filters, callback);
 });
 
-function isAdmin(u, p) {
-	return (u == 'admin' && p == 'pass');
+//PURCHASE
+app.post('/purchaseForm', function(req, res){
+	var p = req.body;
+
+	var callback = function(status, result) {
+		if (status == true) {
+			res.render('purchase-confirmed');
+		} else {
+			res.locals.reason = result;
+			res.send('purchase-failed');
+		}
+	};
+
+	mdb.purchase(p.event_id, callback);
+});
+
+function isAdmin(e, p) {
+	return (e == 'admin' && p == 'pass');
 }
 
 //catch 404

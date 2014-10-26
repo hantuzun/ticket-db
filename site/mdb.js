@@ -24,7 +24,11 @@ function performLogin(email, password, callback) {
 	res = queryDB(sql, callback);
 }
 
-function search(role, table, targets, filters) {
+function search(table, filters, callback) {
+	//........
+}
+
+function purchase(event_id, callback) {
 	//........
 }
 
@@ -53,3 +57,4 @@ function queryDB(requestStr, callback) {
 module.exports.registerUser = registerUser;
 module.exports.performLogin = performLogin;
 module.exports.search = search;
+module.exports.purchase = purchase;
