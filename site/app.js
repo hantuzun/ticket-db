@@ -1,14 +1,14 @@
- module.exports = app;
+module.exports = app;
 //Module dependencies
- var express = require('express');
- var path = require('path');
- var routes = require('./routes/index');
- //mysql file:
- var mdb = require('./mdb');
- var session = require('cookie-session');
- var bodyParser = require('body-parser');
- var app = express();
- 
+var express = require('express');
+var path = require('path');
+var routes = require('./routes/index');
+//mysql file:
+var mdb = require('./mdb');
+var session = require('cookie-session');
+var bodyParser = require('body-parser');
+var app = express();
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
