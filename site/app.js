@@ -1,12 +1,12 @@
- module.exports = app;
+module.exports = app;
 //Module dependencies
- var express = require('express');
- var path = require('path');
- var routes = require('./routes/index');
- //mysql file:
- var mdb = require('./mdb');
- var session = require('cookie-session')
- var app = express();
+var express = require('express');
+var path = require('path');
+var routes = require('./routes/index');
+//mysql file:
+var mdb = require('./mdb');
+var session = require('cookie-session')
+var app = express();
  
 
 app.use(express.cookieSession());
@@ -30,7 +30,7 @@ app.post('/loginForm',function(req,res){
 			}
 			res.render('home');
 		} else {
-			res.locals.reason = login;
+			res.locals.reason = result;
 			res.send('///////////////////////'); //alert message, not new page
 		}
 	};
@@ -41,15 +41,18 @@ app.post('/loginForm',function(req,res){
 //SUBMIT REGISTRATION INFO
 app.post('/registrationForm',function(req,res){
 	var p = req.body;
-	var reg = mdb.registerUser(p.email, p.username, p.password, p.firstname, p.lastname);
 	
-	if (reg == true){
-		res.render('home');
-	}
-	else {
-		res.locals.reason = reg;
-		res.render('//////////////////////')
-	}
+	var callback = function(status, result) {
+		if (status == true){
+			res.render('home');
+		}
+		else {
+			res.locals.reason = result;
+			res.render('//////////////////////')
+		}
+	};
+	
+	mdb.registerUser(p.email, p.username, p.password, p.firstname, p.lastname, callback);
 });
 
 //SEARCH

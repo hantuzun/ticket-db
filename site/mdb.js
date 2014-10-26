@@ -31,7 +31,7 @@ function search(role, table, targets, filters) {
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
 	var status, result;
-	
+
 	client.connect(function(err) {
 		if (err){
 			status = false;
