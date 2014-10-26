@@ -1,0 +1,15 @@
+doctype
+html
+	title #{title}
+
+body
+	header
+		h1 Login
+			form(method='post',action='/login')
+				input(type='text',placeholder='username',name='username')
+				input(type='password',placeholder='password',name='password')
+				input(type='submit',name='submit',value='submit')
+		block cnotent
+			|not a memeber?
+			|sign up here:
+			button(type='button',onClick='window.location.href="/signUp"') Sign Up!			

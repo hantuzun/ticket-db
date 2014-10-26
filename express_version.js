@@ -16,6 +16,7 @@ app.post('/register', function(req, res){
 	else {
 		res.locals.reason = reg;
 		res.render('registration-failed')
+	}
 });
 
 //LOGIN
@@ -33,6 +34,7 @@ app.get('/login', function(req, res){
 	else {
 		res.locals.reason = login;
 		res.render('login-failed')
+	}
 });
 
 //SEARCH
