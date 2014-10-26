@@ -25,7 +25,36 @@ function performLogin(email, password, callback) {
 }
 
 function search(table, filters, callback) {
-	//........
+	// filters is a json file
+
+	// if table = "events" or "artists" and filters = {"venue": "Mungyeong", "date": "2015-03-24"}
+	// when I query 'sql' on Sequel it returns the expected results
+
+	var sql = "SELECT DISTINCT ? \
+	    FROM artist_loc \
+	    JOIN events ON artist_loc.event_id = events.event_id \
+	    JOIN artists ON artist_loc.artist_name = artists.name";
+	    
+	var events_selection = "events.event_id, events.venue, events.date, events.tickets_left, events.price_per_ticket, artists.name";
+	var artists_selection = "artists.name, artists.info";
+
+	if (table === "events") {
+		sql = sql.replace("?", events_selection);
+	} else if (table === "artists") {
+		sql = sql.replace("?", artists_selection);
+	} else {
+		callback(false, err);
+	}
+
+	if (filters) {
+		var array = []
+		for(var k in filters) {
+			array.push(k + " = \'" + filters[k] + "\'");
+		}
+		sql = sql + " WHERE " + array.join(" AND ");
+	}
+
+	res = queryDB(sql, callback);
 }
 
 function purchase(event_id, email, price, callback) {
