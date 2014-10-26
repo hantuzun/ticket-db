@@ -10,22 +10,18 @@ var client = mysql.createConnection(
 	}
 );
 
-function registerUser(email, password, firstname, lastname) {
+function registerUser(email, password, firstname, lastname, callback) {
 	var sql = "INSERT INTO users VALUES(?,?,?,?)";
 	sql = mysql.format(sql, [email, password, firstname, lastname]);
 
-	res = queryDB(sql);
-	return res.status;
+	res = queryDB(sql, callback);
 }
 
-function performLogin(email, password) {
+function performLogin(email, password, callback) {
 	var sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 	sql = mysql.format(sql, [email, password]);
-	res = queryDB(sql);
-	if (res.status && res.result.length == 1) {
-		return true;
-	}
-	return false;
+	
+	res = queryDB(sql, callback);
 }
 
 function search(role, table, targets, filters) {
@@ -33,35 +29,30 @@ function search(role, table, targets, filters) {
 }
 
 //GENERIC DB QUERY FUNCTION
-function queryDB(requestStr) {
-	var tupleRes;
+function queryDB(requestStr, callback) {
+	var status, result;
 	
 	client.connect(function(err) {
 		if (err){
-			tupleRes = {status: false, result: err};
+			status = false;
+			result = err;
 		}
 	});
-	if (tupleRes != null && tupleRes != undefined) {
-		console.log("error in connection");
-		client.end();
-		return tupleRes;
-	}
 
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
-				console.log("makeing query *******");
-				tupleRes = {status: true, result: res};
-				console.log("this is the tupleRes result : "+tupleRes.status);
+				status = true;
+				result = res;
 			} else {
-				console.log("else query ******");
-				tupleRes = {status: false, result: err};
+				status = false;
+				result = err;
 			}
 		}
 	);
-	
+
 	client.end();
-	return tupleRes;
+	callback(status, result);
 }
 
 module.exports.registerUser = registerUser;

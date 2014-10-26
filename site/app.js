@@ -6,17 +6,10 @@
  //mysql file:
  var mdb = require('./mdb');
  var session = require('cookie-session')
- var bodyParser = require('body-parser');
  var app = express();
  
 
-app.use(session({
-  keys: ['key1', 'key2'],
-  secureProxy: true // if you do SSL outside of node
-}));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-   extended: true}));
+app.use(express.cookieSession());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
 app.use('/',routes);
@@ -26,28 +19,30 @@ app.use('/',routes);
 //SUBMIT LOGIN INFO
 app.post('/loginForm',function(req,res){
 	var p = req.body;
-	console.log(p.email);
-	req.session.username = p.email;
-	var login = true;//mdb.performLogin(p.email, p.password);
-	if (login == true){
-		req.session.username = p.email;
-		if (isAdmin(p.email, p.password)) {
-			res.locals.role = 'admin';
+
+	var callback = function(status, result) {
+		if (status == true && result.length == 1) { //found in table
+			req.session.username = p.email;
+			if (isAdmin(p.email, p.password)) {
+				res.session.role = 'admin';
+			} else {
+				res.session.role = 'user';
+			}
+			res.render('home');
 		} else {
-			res.locals.role = 'user';
+			res.locals.reason = login;
+			res.send('///////////////////////'); //alert message, not new page
 		}
-		res.redirect('/');
-	}
-	else {
-		res.locals.reason = login;
-		res.send('///////////////////////') ;
-		} //alert message, not new page
+	};
+
+	mdb.performLogin(p.email, p.password, callback);
 });
 
 //SUBMIT REGISTRATION INFO
 app.post('/registrationForm',function(req,res){
 	var p = req.body;
-	var reg = registerUser(p.email, p.username, p.password, p.firstname, p.lastname);
+	var reg = mdb.registerUser(p.email, p.username, p.password, p.firstname, p.lastname);
+	
 	if (reg == true){
 		res.render('home');
 	}
@@ -59,8 +54,9 @@ app.post('/registrationForm',function(req,res){
 
 //SEARCH
 app.get('/search', function(req, res){
-	var p = req.params;
-	var searchRes = search(p.role, p.table, p.targets, p.filers);
+	var p = req.body;
+	var searchRes = mdb.search(p.role, p.table, p.targets, p.filers);
+	
 	if (searchRes == true){
 		res.render('search-results');
 	}
@@ -79,9 +75,12 @@ app.use(function(req,res,next){
  		var err = new Error('Not Found');
  		err.status = 404;
  		next(err);
- 	});
-app.listen(80);
+});
 
+	
+/***********/
+app.listen(80);
+/***********/
 
 
  
