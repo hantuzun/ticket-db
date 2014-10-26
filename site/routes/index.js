@@ -1,12 +1,15 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
+var session = require('cookie-session')
+
 
 /* GET home page. */
 router.get('/', function(req, res) {
   //var elem = document.getElementById('hideThis');
   //elem.style.display = 'none';	
-  res.render('home', { title: 'Eventss Database' });
+ var username = req.session.username;
+  res.render('home', { title: 'Eventss Database '+username });
 });
 
 /* GET login page. */

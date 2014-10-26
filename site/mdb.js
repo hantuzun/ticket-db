@@ -21,7 +21,6 @@ function registerUser(email, password, firstname, lastname) {
 function performLogin(email, password) {
 	var sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 	sql = mysql.format(sql, [email, password]);
-	
 	res = queryDB(sql);
 	if (res.status && res.result.length == 1) {
 		return true;
@@ -43,6 +42,7 @@ function queryDB(requestStr) {
 		}
 	});
 	if (tupleRes != null && tupleRes != undefined) {
+		console.log("error in connection");
 		client.end();
 		return tupleRes;
 	}
@@ -50,17 +50,20 @@ function queryDB(requestStr) {
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
+				console.log("makeing query *******");
 				tupleRes = {status: true, result: res};
+				console.log("this is the tupleRes result : "+tupleRes.status);
 			} else {
+				console.log("else query ******");
 				tupleRes = {status: false, result: err};
 			}
 		}
 	);
-
+	
 	client.end();
 	return tupleRes;
 }
 
 module.exports.registerUser = registerUser;
 module.exports.performLogin = performLogin;
-module.exports.searchDB = searchDB;
+module.exports.search = search;

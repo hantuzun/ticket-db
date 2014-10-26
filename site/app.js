@@ -6,10 +6,17 @@
  //mysql file:
  var mdb = require('./mdb');
  var session = require('cookie-session')
+ var bodyParser = require('body-parser');
  var app = express();
  
 
-app.use(express.cookieSession());
+app.use(session({
+  keys: ['key1', 'key2'],
+  secureProxy: true // if you do SSL outside of node
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+   extended: true}));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
 app.use('/',routes);
@@ -18,8 +25,10 @@ app.use('/',routes);
 
 //SUBMIT LOGIN INFO
 app.post('/loginForm',function(req,res){
-	var p = req.params;
-	var login = performLogin(p.email, p.password);
+	var p = req.body;
+	console.log(p.email);
+	req.session.username = p.email;
+	var login = true;//mdb.performLogin(p.email, p.password);
 	if (login == true){
 		req.session.username = p.email;
 		if (isAdmin(p.email, p.password)) {
@@ -27,7 +36,7 @@ app.post('/loginForm',function(req,res){
 		} else {
 			res.locals.role = 'user';
 		}
-		res.render('home');
+		res.redirect('/');
 	}
 	else {
 		res.locals.reason = login;
@@ -37,7 +46,7 @@ app.post('/loginForm',function(req,res){
 
 //SUBMIT REGISTRATION INFO
 app.post('/registrationForm',function(req,res){
-	var p = req.params;
+	var p = req.body;
 	var reg = registerUser(p.email, p.username, p.password, p.firstname, p.lastname);
 	if (reg == true){
 		res.render('home');
@@ -71,11 +80,8 @@ app.use(function(req,res,next){
  		err.status = 404;
  		next(err);
  	});
-function performLogin(email, password) {
-	//stuff
-	return true;
-}
 app.listen(80);
+
 
 
  
