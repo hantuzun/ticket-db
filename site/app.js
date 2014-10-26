@@ -85,7 +85,7 @@ app.post('/purchaseForm', function(req, res){
 		}
 	};
 
-	mdb.purchase(p.event_id, callback);
+	mdb.purchase(p.event_id, p.email, p.price, callback);
 });
 
 function isAdmin(e, p) {
