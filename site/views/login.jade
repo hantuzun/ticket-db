@@ -5,11 +5,11 @@ html
 body
 	header
 		h1 Login
-			form(method='post',action='/login')
+			form(method='post',action='/loginForm')
 				input(type='text',placeholder='username',name='username')
 				input(type='password',placeholder='password',name='password')
 				input(type='submit',name='submit',value='submit')
 		block cnotent
 			|not a memeber?
 			|sign up here:
-			button(type='button',onClick='window.location.href="/signUp"') Sign Up!			
+			button(type='button',onClick='window.location.href="/register"') Sign Up!			

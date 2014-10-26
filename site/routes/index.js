@@ -7,6 +7,8 @@ app.use(bodyParser.json());
 
 /* GET home page. */
 router.get('/', function(req, res) {
+  //var elem = document.getElementById('hideThis');
+  //elem.style.display = 'none';	
   res.render('home', { title: 'Eventss Database' });
 });
 
@@ -21,7 +23,7 @@ router.get('/profile',function(req,res){
 });
 
 /*GET sign up page*/
-router.get('/signUp',function(req,res){
+router.get('/register',function(req,res){
 	res.render('signUp');
 });
  

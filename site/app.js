@@ -19,18 +19,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/',routes);
 
-app.post('/login',function(req,res){
+app.post('/loginForm',function(req,res){
 	var username = req.param('username');
 	var password = req.param('password');
 	console.log(username+'\n'+password);
-	res.send('tah dah');
+	res.get('/home');
 });
 
-app.post('/signUpForm',function(req,res){
-	var name = req.param('name');
-	var email = req.param('emialAddress')
+app.post('/registrationForm',function(req,res){
+	var firstname = req.param('firstname');
+	var lastname = req.param('lastname');
+	var email = req.param('email')
 	var password = req.param('password')
-	console.log(name+'\n'+email+'\n'+password) 
+	console.log(firstname+'\n'+lastname+'\n'+email+'\n'+password) 
 })
 
 
@@ -49,7 +50,7 @@ app.use(function(req,res,next){
 
 
 
- app.listen(3000);
+ app.listen(80);
 
 
  
