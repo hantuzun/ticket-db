@@ -1,17 +1,14 @@
- module.exports = app;
+module.exports = app;
 //Module dependencies
- var express = require('express');
- var path = require('path');
- var bodyParser = require('body-parser');
- var routes = require('./routes/index');
- //mysql file:
- var mdb = require('./mdb.js');
+var express = require('express');
+var path = require('path');
+var bodyParser = require('body-parser');
+var routes = require('./routes/index');
+//mysql file:
+var mdb = require('./mdb.js');
 
- var app = express();
- app.use(bodyParser.json());
- app.use(bodyParser.urlencoded({
-    extended: true
-}));
+var app = express();
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
 app.use('/',routes);
@@ -32,6 +29,7 @@ app.post('/loginForm',function(req,res){
 	else {
 		res.locals.reason = login;
 		res.send('///////////////////////')  //alert message, not new page
+	}
 });
 
 //SUBMIT REGISTRATION INFO
@@ -44,6 +42,7 @@ app.post('/registrationForm',function(req,res){
 	else {
 		res.locals.reason = reg;
 		res.render('//////////////////////')
+	}
 })
 
 //SEARCH
@@ -56,6 +55,7 @@ app.get('/search', function(req, res){
 	else {
 		res.locals.reason = searchRes;
 		res.render('search-failed')
+	}
 });
 
 function isAdmin(u, p) {
@@ -69,7 +69,11 @@ app.use(function(req,res,next){
  		next(err);
  	});
 
+
+
+/***************/
 app.listen(80);
+/***************/
 
 
  

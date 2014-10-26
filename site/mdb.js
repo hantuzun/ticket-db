@@ -1,6 +1,3 @@
-var express = require('express');
-var http = require('http');
-var app = express();
 var mysql = require('mysql'); 
 
 var client = mysql.createConnection(
@@ -15,34 +12,41 @@ var client = mysql.createConnection(
 
 function registerUser(email, password, firstname, lastname) {
 	var sql = "INSERT INTO users VALUES(?,?,?,?)";
-	var inserts = [email, password, firstname, lastname];
-	sql = mysql.format(sql, inserts);
+	sql = mysql.format(sql, [email, password, firstname, lastname]);
 
 	res = queryDB(sql);
 	return res.status;
 }
 
 function performLogin(email, password) {
-	//stuff
-	return true;
+	var sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+	sql = mysql.format(sql, [email, password]);
+	
+	res = queryDB(sql);
+	if (res.status && res.result.length == 1) {
+		return true;
+	}
+	return false;
 }
 
 function search(role, table, targets, filters) {
-	var admin = (role == 'admin');
-	if (table == 'users' || table == 'tickets') {
-		if (!admin) {
-			return false;
-		} else {
-			//...
-		}
-	}
+	//........
 }
 
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr) {
-	client.connect();
-	
 	var tupleRes;
+	
+	client.connect(function(err) {
+		if (err){
+			tupleRes = {status: false, result: err};
+		}
+	});
+	if (tupleRes != null && tupleRes != undefined) {
+		client.end();
+		return tupleRes;
+	}
+
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
@@ -52,7 +56,11 @@ function queryDB(requestStr) {
 			}
 		}
 	);
-	
+
 	client.end();
 	return tupleRes;
 }
+
+module.exports.registerUser = registerUser;
+module.exports.performLogin = performLogin;
+module.exports.searchDB = searchDB;
