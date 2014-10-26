@@ -1,6 +1,3 @@
-var express = require('express');
-var http = require('http');
-var app = express();
 var mysql = require('mysql'); 
 
 var client = mysql.createConnection(

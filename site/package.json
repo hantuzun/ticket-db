@@ -5,7 +5,6 @@
   "dependencies": {
     "express": "~4.9.0",
     "jade": "*",
-    "body-parser": "*",
-    "nodemon": "*"
+    "cookie-session" : "*"    
   }
 }
