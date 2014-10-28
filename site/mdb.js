@@ -32,7 +32,7 @@ function purchase(event_id, email, price, callback) {
 	var sql1 = "SELECT tickets_left FROM events WHERE event_id = ?";
 	sql1 = mysql.format(sql, [event_id]);
 	var sql2 = "UPDATE events SET tickets_left = ? WHERE event_id = ?";
-	var sql3 = "INSERT INTO purchased_tickets (event_id, date_of_purchase, owner, price) VALUES(?, ?, ?, ?, ?)";
+	var sql3 = "INSERT INTO purchased_tickets (event_id, owner, date_of_purchase, price) VALUES(?, ?, ?, ?)";
 	sql3 = mysql.format(sql3, [event_id, email, currDate()/*Works?*/, price]);
 
 	queryDB(sql1, 
@@ -40,7 +40,7 @@ function purchase(event_id, email, price, callback) {
 			if (!status) {
 				callback(false, result);
 			} else {
-				numTix = result.one; //????????
+				numTix = Number(result[0].tickets_left);
 				if (numTix < 1) {
 					callback(false, "SOLD OUT");
 				} else {
