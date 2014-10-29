@@ -24,12 +24,12 @@ app.post('/loginForm',function(req,res){
 
 	var callback = function(status, result) {
 		if (status == true && result.length == 1) {
-			req.session.username = p.email;
+			/*req.session.username = p.email;      //TODO: REQ.SESSION DOESN'T EXIST YET
 			if (isAdmin(p.email, p.password)) {
 				res.session.role = 'admin';
 			} else {
 				res.session.role = 'user';
-			}
+			}*/
 			res.render('home');
 		} else {
 			res.locals.reason = result;
@@ -49,7 +49,7 @@ app.post('/registrationForm',function(req,res){
 			res.render('home');
 		} else {
 			res.locals.reason = result;
-			res.send('reg failed');  //TODO: alert
+			res.send('reg failed' + result);  //TODO: alert
 		}
 	};
 
@@ -100,5 +100,5 @@ app.use(function(req,res,next){
 });
 	
 /***********/
-app.listen(8080);
+app.listen(3000);
 /***********/
