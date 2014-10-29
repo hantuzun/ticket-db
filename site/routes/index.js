@@ -5,10 +5,8 @@ var session = require('cookie-session')
 
 
 /* GET home page. */
-router.get('/', function(req, res) {
-  //var elem = document.getElementById('hideThis');
-  //elem.style.display = 'none';	
- //var username = req.session.username;
+router.get('/', function(req, res) {	
+  //var username = req.session.username;
   res.render('home', { title: 'Eventss Database '});
 });
 

@@ -24,7 +24,8 @@ app.post('/loginForm',function(req,res){
 
 	var callback = function(status, result) {
 		if (status == true && result.length == 1) {
-			req.session.username = p.email;
+			//req.session.username = p.email;
+			//console.log(req.session.username);
 			if (isAdmin(p.email, p.password)) {
 				res.session.role = 'admin';
 			} else {
