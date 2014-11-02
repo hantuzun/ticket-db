@@ -9,7 +9,7 @@ router.get('/', function(req, res) {
   //var elem = document.getElementById('hideThis');
   //elem.style.display = 'none';	
  //var username = req.session.username;
-  res.render('home', { title: 'Eventss Database '});
+  res.render('home', { title: 'Events Database'});
 });
 
 /* GET login page. */
@@ -30,6 +30,11 @@ router.get('/register',function(req,res){
 /*GET search page*/
 router.get('/search',function(req,res){
 	res.render('search');
+});
+
+/*GET admin panel*/
+router.get('/admin',function(req,res){
+	res.render('admin');
 });
  
 
