@@ -26,6 +26,11 @@ router.get('/profile',function(req,res){
 router.get('/register',function(req,res){
 	res.render('signUp');
 });
+
+/*GET search page*/
+router.get('/search',function(req,res){
+	res.render('search');
+});
  
 
 module.exports = router;
