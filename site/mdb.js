@@ -88,6 +88,13 @@ function purchase(event_id, email, price, callback) {
 	);
 }
 
+function showProfile(email, callback) {
+	var sql = "SELECT * FROM purchased_tickets WHERE owner = ?";
+	sql = mysql.format(sql, [email]);
+	
+	queryDB(sql, callback);
+}
+
 //FOR ADMINS
 function modifyTable(table, updateOrDelete, keyColumn, changeColumn, keyVal, newVal, callback) {
 	var sql;
@@ -142,3 +149,4 @@ module.exports.performLogin = performLogin;
 module.exports.search = search;
 module.exports.purchase = purchase;
 module.exports.modifyTable = modifyTable;
+module.exports.showProfile = showProfile;
