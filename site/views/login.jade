@@ -9,6 +9,10 @@ body
 				input(type='text',placeholder='email',name='email')
 				input(type='password',placeholder='password',name='password')
 				input(type='submit',name='submit',value='submit')
+		
+			-if(error == 'true'){
+				p incorrect username or password
+			-}	
 		block content
 			|not a member?
 			|sign up here:
