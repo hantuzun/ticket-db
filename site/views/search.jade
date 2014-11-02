@@ -1,0 +1,19 @@
+doctype
+html
+	header
+
+		h1 Search by artist, venues, or dates
+			form(method='post',action = '/searchForm')
+				input(type='text',placeholder='artist',name = 'artist')
+				input(type='text',placeholder='venue',name='venue')
+				input(type='text', name='mdate', id='mdate')
+
+		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+		script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js')
+		script(type='text/javascript').
+			$(document).ready(
+				function initDate() {
+					console.log('here');
+					$('#mdate').datepicker({dateFormat: 'yy-mm-dd'});
+				}
+			);

@@ -14,19 +14,18 @@ function registerUser(email, password, firstname, lastname, callback) {
 	var sql = "INSERT INTO users VALUES(?,?,?,?)";
 	sql = mysql.format(sql, [email, password, firstname, lastname]);
 
-	res = queryDB(sql, callback);
+	queryDB(sql, callback);
 }
 
 function performLogin(email, password, callback) {
 	var sql = "SELECT * FROM users WHERE email = ? AND password = ?";
 	sql = mysql.format(sql, [email, password]);
 
-	res = queryDB(sql, callback);
+	queryDB(sql, callback);
 }
 
 function search(table, filters, callback) {
-	// filters is a json file
-
+	// filters is a js object
 	// if table = "events" or "artists" and filters = {"venue": "Mungyeong", "date": "2015-03-24"}
 	// when I query 'sql' on Sequel it returns the expected results
 
@@ -54,7 +53,7 @@ function search(table, filters, callback) {
 		sql = sql + " WHERE " + array.join(" AND ");
 	}
 
-	res = queryDB(sql, callback);
+	queryDB(sql, callback);
 }
 
 function purchase(event_id, email, price, callback) {
@@ -89,6 +88,20 @@ function purchase(event_id, email, price, callback) {
 	);
 }
 
+//FOR ADMINS
+function modifyTable(table, updateOrDelete, keyColumn, changeColumn, keyVal, newVal, callback) {
+	var sql;
+	if (! updateOrDelete) {
+		sql = "UPDATE ? SET ? = ? WHERE ? = ?";
+		sql = mysql.format(sql, [table, changeColumn, newVal, keyColumn, keyVal]);
+	} else {
+		sql = "DELETE FROM ? WHERE ? = ?";
+		sql = mysql.format(sql, [table, keyColumn, keyVal]);
+	}
+	queryDB(sql, callback);
+}
+
+
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
 
@@ -111,18 +124,16 @@ function queryDB(requestStr, callback) {
 	);
 }
 
+//Get current Datetime
 function currDate() {
 	var today = new Date();
 	var dd = today.getDate();
 	var mm = today.getMonth()+1; //January is 0!
 	var yyyy = today.getFullYear();
 
-	if(dd<10) {
-		dd='0'+dd
-	}
-	if(mm<10) {
-		mm='0'+mm
-	}
+	if(dd<10) { dd='0'+dd; }
+	if(mm<10) { mm='0'+mm; }
+
 	return yyyy+'-'+mm+'-'+dd;
 }
 
@@ -130,3 +141,4 @@ module.exports.registerUser = registerUser;
 module.exports.performLogin = performLogin;
 module.exports.search = search;
 module.exports.purchase = purchase;
+module.exports.modifyTable = modifyTable;

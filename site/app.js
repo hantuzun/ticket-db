@@ -66,7 +66,7 @@ app.post('/search', function(req, res){
 
 	var callback = function(status, result) {
 		if (status == true) {
-			res.render('search-results');
+			res.render('search-results', {res: result});
 		} else {
 			res.locals.reason = result;
 			res.send('search-failed');  //TODO: alert?
@@ -98,7 +98,7 @@ function isAdmin(e, p) {
 
 //catch 404
 app.use(function(req,res,next){
- 		var err = new Error('Not Found');
+ 		var err = new Error('404: Not Found');
  		err.status = 404;
  		next(err);
 });
