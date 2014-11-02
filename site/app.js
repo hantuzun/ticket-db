@@ -61,12 +61,12 @@ app.post('/registrationForm',function(req,res){
 });
 
 //SEARCH
-app.post('/search', function(req, res){
+app.post('/searchForm', function(req, res){
 	var p = req.body;
 
 	var callback = function(status, result) {
 		if (status == true) {
-			res.render('search-results', {res: result});
+			res.render('results', {res: result});
 		} else {
 			res.locals.reason = result;
 			res.send('search-failed');  //TODO: alert?

@@ -3,9 +3,24 @@ html
 	header
 		h1 Super Secret Admin Panel
 
-		| table to alter:   
-		select
-			option(value='artists') artists
-			option(value='events') events
-			option(value='tickets') tickets
-			option(value='users') users
+		div
+			| table to alter:   
+			select
+				option(value='artists') artists
+				option(value='events') events
+				option(value='tickets') tickets
+				option(value='users') users
+			
+			select
+				option(value='del') delete
+				option(value='mod') modify
+			input(type='text',placeholder='where',name = 'column')
+			| = 
+			input(type='text',placeholder='value',name = 'value')
+		
+		| &nbsp;
+		div
+			button#btnLogin(type='button',onClick="window.location.href='/search'") View all Users
+		| &nbsp;
+		div
+			button#btnLogin(type='button',onClick="window.location.href='/search'") View all Tickets
