@@ -1,13 +1,19 @@
 var express = require('express');
 var app = express();
 var router = express.Router();
-var session = require('cookie-session')
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var expressSession = require('express-session');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+app.use(expressSession({secret:'secretKeyHash'}));
 
 
 /* GET home page. */
 router.get('/', function(req, res) {	
-  //var username = req.session.username;
-  res.render('home', { title: 'Eventss Database '});
+  var name = req.session.username;
+  res.render('home', { title: 'Eventss Database '+name});
 });
 
 /* GET login page. */

@@ -5,7 +5,8 @@ var path = require('path');
 var routes = require('./routes/index');
 
 var mdb = require('./mdb'); //mysql file
-var session = require('cookie-session');
+var expressSession = require('express-session');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var app = express();
@@ -15,23 +16,25 @@ app.set('view engine','jade');
 app.use('/',routes);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+app.use(expressSession({secret:'secretKeyHash'}));
 
 
 
 //SUBMIT LOGIN INFO
 app.post('/loginForm',function(req,res){
 	var p = req.body;
-
+	req.session.username = p.email; 
 	var callback = function(status, result) {
 		if (status == true && result.length == 1) {
-			//req.session.username = p.email;
-			//console.log(req.session.username);
-			if (isAdmin(p.email, p.password)) {
+			 
+			console.log("here is the session = "+req.session.username);   
+			/*if (isAdmin(p.email, p.password)) { //TODO: REQ.SESSION DOESN'T EXIST YET
 				res.session.role = 'admin';
 			} else {
 				res.session.role = 'user';
-			}
-			res.render('home');
+			}*/
+			res.redirect('/');
 		} else {
 			res.locals.reason = result;
 			res.send('login not found');  //TODO: alert
@@ -50,7 +53,7 @@ app.post('/registrationForm',function(req,res){
 			res.render('home');
 		} else {
 			res.locals.reason = result;
-			res.send('reg failed');  //TODO: alert
+			res.send('reg failed' + result);  //TODO: alert
 		}
 	};
 
@@ -101,5 +104,5 @@ app.use(function(req,res,next){
 });
 	
 /***********/
-app.listen(8080);
+app.listen(3000);
 /***********/
