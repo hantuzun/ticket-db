@@ -73,12 +73,17 @@ app.post('/searchForm', function(req, res){
 			res.send('search-failed');  //TODO: alert?
 		}
 	};
+	
+	var filters = {};
+	if (p.artist != '') { filters.artist = p.artist; }
+	if (p.venue != '') { filters.venue = p.venue; }
+	if (p.date != '') { filters.date = p.date; }
 
-	mdb.search(p.table, p.filters, callback);
+	mdb.search(p.table, filters, callback);
 });
 
 //PURCHASE
-app.post('/purchaseForm', function(req, res){
+app.post('/purchaseForm', function(req, res) {
 	var p = req.body;
 
 	var callback = function(status, result) {

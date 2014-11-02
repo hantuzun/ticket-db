@@ -3,20 +3,7 @@ html
 
 	header
 		h1 Search by artist, venues, or dates
-		p
-		| Search for:   
-		select
-			option(value='artists') artists
-			option(value='events') events
-		p
-		|   Filter by:   
-		form(method='post',action = '/searchForm')
-			input(type='text', placeholder='artist', name = 'artist')
-			input(type='text', placeholder='venue', name='venue')
-			input(type='text', placeholder='date', name='date', id='date')
-			input(type='submit', name='submit', value='submit')
-
-
+			
 		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 		script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js')
 		script(type='text/javascript').
@@ -26,3 +13,24 @@ html
 					$('#date').datepicker({dateFormat: 'yy-mm-dd'});
 				}
 			);
+			
+			function getval() {
+				var e = document.getElementById("s1");
+				var v = e.options[e.selectedIndex].value;
+				$('#te').val(v);
+			}
+
+
+	| Search for:   
+	select(id='s1')
+		option(value='artists') Artists
+		option(value='events') Events
+	p
+	
+	form(method='post', action = '/searchForm')
+		|   Filter by:   
+		input(type='hidden', name='table', id='te')
+		input(type='text', placeholder='artist', name = 'artist')
+		input(type='text', placeholder='venue', name='venue')
+		input(type='text', placeholder='date', name='date', id='date')
+		input(type='submit', name='submit', onclick='getval()')
