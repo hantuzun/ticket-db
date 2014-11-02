@@ -13,11 +13,11 @@ var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
-app.use('/',routes);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(expressSession({secret:'secretKeyHash'}));
+app.use('/',routes);
 
 
 
@@ -37,7 +37,8 @@ app.post('/loginForm',function(req,res){
 			res.redirect('/');
 		} else {
 			res.locals.reason = result;
-			res.send('login not found');  //TODO: alert
+			req.session.loginError = 'true';
+			res.redirect( '/login');  //TODO: alert
 		}
 	};
 

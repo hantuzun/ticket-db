@@ -1,20 +1,26 @@
 var express = require('express');
-var app = express();
+var app = require('../app');
 var router = express.Router();
-var session = require('cookie-session')
+var session = require('cookie-session');
 
 
 /* GET home page. */
 router.get('/', function(req, res) {
   //var elem = document.getElementById('hideThis');
   //elem.style.display = 'none';	
- //var username = req.session.username;
-  res.render('home', { title: 'Events Database'});
+ var username = req.session.username;
+ console.log('the username = ' + username);
+  res.render('home', { title: 'Events Database'+ username});
 });
 
 /* GET login page. */
 router.get('/login', function(req, res) {
- res.render('login', { title: 'login' });
+ if(req.session.loginError=='true'){	
+ res.render('login', { title: 'login', error:'true' });
+}
+else{
+	res.render('login', { title: 'login', error:'false' });
+}
 });
 
 /* GET profile page*/
