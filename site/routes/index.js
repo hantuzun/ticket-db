@@ -32,10 +32,15 @@ router.get('/search',function(req,res){
 	res.render('search');
 });
 
-/*GET admin panel*/
+/*GET results page*/
 router.get('/admin',function(req,res){
 	res.render('admin');
 });
- 
+
+/*GET admin panel*/
+router.get('/results',function(req,res){
+	res.render('results');
+});
+
 
 module.exports = router;

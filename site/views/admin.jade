@@ -2,25 +2,50 @@ doctype
 html
 	header
 		h1 Super Secret Admin Panel
-
-		div
-			| table to alter:   
-			select
-				option(value='artists') artists
-				option(value='events') events
-				option(value='tickets') tickets
-				option(value='users') users
+		
+		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+		script(type='text/javascript').
+			function getvals() {
+				var e1 = document.getElementById("s1");
+				var v1 = e1.options[e1.selectedIndex].value;
+				$('#t1').val(v1);
+				var e2 = document.getElementById("s2");
+				var v2 = e2.options[e2.selectedIndex].value;
+				$('#t2').val(v2);
+			}
 			
-			select
-				option(value='del') delete
-				option(value='mod') modify
+			function viewUsers() {
+				$.post('/searchForm', {table: 'users'});
+			}
+			function viewTickets() {
+				$.post('/searchForm', {table: 'tickets'});
+			}
+
+	div
+		| table to alter:   
+		select(id='s1')
+			option(value='artists') artists
+			option(value='events') events
+			option(value='tickets') tickets
+			option(value='users') users
+
+		select(id='s2')
+			option(value='del') delete
+			option(value='mod') modify
+		p
+		form(method='post', action = '/adminForm')
 			input(type='text',placeholder='where',name = 'column')
 			| = 
 			input(type='text',placeholder='value',name = 'value')
-		
-		| &nbsp;
-		div
-			button#btnLogin(type='button',onClick="window.location.href='/search'") View all Users
-		| &nbsp;
-		div
-			button#btnLogin(type='button',onClick="window.location.href='/search'") View all Tickets
+			input(type='hidden', name='table', id='t1')
+			input(type='hidden', name='action', id='t2')
+			input(type='submit', name='submit', onclick='getvals()')
+	
+	p
+	div
+		//button#btnU(type='button',onClick="window.location.href='/searchForm") View all Users
+		button#btnLogin(type='button',onClick="viewUsers()") View all Users
+	p
+	div
+		//button#btnT(type='button',onClick="window.location.href='/search'") View all Tickets
+		button#btnT(type='button',onClick="viewTickets()") View all Tickets
