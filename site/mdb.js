@@ -89,6 +89,7 @@ function purchase(event_id, email, price, callback) {
 }
 
 function showProfile(email, callback) {
+	console.log('this happens fine');
 	var sql = "SELECT * FROM purchased_tickets WHERE owner = ?";
 	sql = mysql.format(sql, [email]);
 	
@@ -121,10 +122,10 @@ function queryDB(requestStr, callback) {
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
-				client.end();
+				//client.end();
 				callback(true, res);
 			} else {
-				client.end();
+				//client.end();
 				callback(false, err);
 			}
 		}
