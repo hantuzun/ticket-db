@@ -98,21 +98,22 @@ app.post('/purchaseForm', function(req, res) {
 	mdb.purchase(p.event_id, p.email, p.price, callback);
 });
 
-//PROFILE
-app.post('/userProfile', function(req, res) {  //NOT IMPLEMENTED
-	var p = req.body;
+// //PROFILE
+// app.post('/userProfile', function(req, res) {
+// 	var email = req.session.username;
 
-	var callback = function(status, result) {
-		if (status == true) {
-			res.render('profile');
-		} else {
-			res.locals.reason = result;
-			res.send('could not find profile');
-		}
-	};
+// 	var callback = function(status, result) {
+// 		console.log(result);
+// 		if (status == true) {
+// 			res.render('userProfile');
+// 		} else {
+// 			res.locals.reason = result;
+// 			res.send('could not find profile');
+// 		}
+// 	};
 
-	mdb.showProfile(p.email, callback);
-});
+// 	mdb.showProfile(email, callback);
+// });
 
 function isAdmin(e, p) {
 	return (e == 'admin' && p == 'pass');
