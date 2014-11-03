@@ -26,14 +26,14 @@ else{
 
 /* GET profile page*/
 router.get('/userProfile',function(req,res){
-	var email = req.session.username;
+	var email = "test@test.test";//req.session.username;
 	var callback = function(status, result) {
-		console.log('here is the : '+result+'\n');
 		if (status == true) {
-			res.render('userProfile');
+			res.render('userProfile',{res:result});
+			console.log("result from queryDB() = "+JSON.stringify(result));
 		} else {
 			res.locals.reason = result;
-			res.send('could not find profile');
+			res.send('could not find profile\n'+res.locals.reason);
 		}
 	};
 

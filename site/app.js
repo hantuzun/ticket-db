@@ -70,7 +70,7 @@ app.post('/searchForm', function(req, res){
 			res.render('results', {res: result});
 		} else {
 			res.locals.reason = result;
-			res.send('search-failed');  //TODO: alert?
+			res.send('search-failed' + result);  //TODO: alert?
 		}
 	};
 	

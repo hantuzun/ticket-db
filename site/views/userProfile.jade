@@ -1,6 +1,17 @@
 doctype
 html
+	header
+		h1 Hi #{username} here are your tickets:
+		
 	body
-		header
-			h1 Hi #{username} here are your tickets:
-			
+		table
+			thead
+				tr
+					for key in Object.keys(res[0])
+						th #{key}
+			tbody
+				for item in res
+					tr
+						for value in item
+							td= value				
+
