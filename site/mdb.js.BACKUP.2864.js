@@ -88,9 +88,24 @@ function purchase(event_id, email, price, callback) {
 	);
 }
 
-function showProfile(email, callback) {
+function showProfile(email, callback) {//toDo: add query to get the artist info and display it
 	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
 	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
+<<<<<<< HEAD
+	var eventsQuery = "SELECT event_name, venue, DATE_FORMAT(events.date,'%Y-%m-%d') FROM events WHERE event_id = ?";
+	console.log("events query first:::::::" + eventsQuery);
+	queryDB(userTicketsQuery,function(status,userTicketResult){
+		eventsQuery = mysql.format(eventsQuery,userTicketResult[0].event_id);		
+		for(var key=1; key<userTicketResult.length; key++ ){
+			if(userTicketResult.hasOwnProperty(key)){
+				eventsQuery+=(' OR event_id = ' +userTicketResult[key].event_id);	
+			}
+		}
+		console.log("events query == = " + eventsQuery);
+		queryDB(eventsQuery,callback);
+	});
+	
+=======
 	var eventsQuery = "SELECT * FROM events WHERE event_id = ?";
 	queryDB(userTicketsQuery, function(status,result){
 		eventsQuery = mysql.format(eventsQuery,result[0].event_id);		
@@ -103,6 +118,7 @@ function showProfile(email, callback) {
 		console.log("EVENTS QUERY = "+eventsQuery);
 		queryDB(eventsQuery, callback);
 	});
+>>>>>>> origin/master
 }
 
 //FOR ADMINS

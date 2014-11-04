@@ -98,6 +98,36 @@ app.post('/purchaseForm', function(req, res) {
 	mdb.purchase(p.event_id, p.email, p.price, callback);
 });
 
+//ADMINCALL
+app.post('/adminForm', function(req, res) {
+	var p = req.body;
+
+	var callback = function(status, result) {
+		if (status == true) {
+			res.send('change made');
+		} else {
+			res.locals.reason = result;
+			res.send('request failed');
+		}
+	};
+
+	var callback_2 = function(status, result) {
+		if (status == true) {
+			res.render('results', {res: result});
+		} else {
+			res.locals.reason = result;
+			res.send('request failed');
+		}
+	};
+	
+	if (p.action == undefined) {
+		mdb.showAll(p.table, callback_2);
+	} else {
+		var uORd = true ? (p.action == 'upd') : false;
+		mdb.modifyTable(p.table, uORd, p.keyCol, p.keyVal, p.changeCol, p.newVal, callback);
+	}
+});
+
 // //PROFILE
 // app.post('/userProfile', function(req, res) {
 // 	var email = req.session.username;

@@ -34,7 +34,7 @@ function search(table, filters, callback) {
 	    JOIN events ON artist_loc.event_id = events.event_id \
 	    JOIN artists ON artist_loc.artist_name = artists.name";
 	    
-	var events_selection = "events.event_id, events.event_name, events.venue, events.date, events.tickets_left, events.price_per_ticket, artists.name";
+	var events_selection = "events.event_id, events.venue, events.date, events.tickets_left, events.price_per_ticket, artists.name";
 	var artists_selection = "artists.name, artists.info";
 
 	if (table === "events") {
@@ -92,7 +92,7 @@ function showProfile(email, callback) {
 	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
 	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
 	var eventsQuery = "SELECT * FROM events WHERE event_id = ?";
-	queryDB(userTicketsQuery, function(status,result){
+	queryDB(userTicketsQuery,function(status,result){
 		eventsQuery = mysql.format(eventsQuery,result[0].event_id);		
 		for(var key=1; key<result.length; key++ ){
 			if(result.hasOwnProperty(key)){
@@ -102,29 +102,22 @@ function showProfile(email, callback) {
 		console.log("----------"+JSON.stringify(result));				
 		console.log("EVENTS QUERY = "+eventsQuery);
 		queryDB(eventsQuery, callback);
-	});
+	} );
 }
 
 //FOR ADMINS
-function modifyTable(table, updateOrDelete, keyColumn, keyVal, changeColumn, newVal, callback) {
+function modifyTable(table, updateOrDelete, keyColumn, changeColumn, keyVal, newVal, callback) {
 	var sql;
-	if (updateOrDelete) {
-		sql = "UPDATE ?? SET ?? = ? WHERE ?? = ?";
+	if (! updateOrDelete) {
+		sql = "UPDATE ? SET ? = ? WHERE ? = ?";
 		sql = mysql.format(sql, [table, changeColumn, newVal, keyColumn, keyVal]);
 	} else {
-		sql = "DELETE FROM ?? WHERE ?? = ?";
+		sql = "DELETE FROM ? WHERE ? = ?";
 		sql = mysql.format(sql, [table, keyColumn, keyVal]);
 	}
-
 	queryDB(sql, callback);
 }
 
-//ALSO FOR ADMINS
-function showAll(table, callback) {
-	var sql = "SELECT * FROM " + table;
-	//sql = mysql.format(sql, [table]);
-	queryDB(sql, callback);
-}
 
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
@@ -166,5 +159,4 @@ module.exports.performLogin = performLogin;
 module.exports.search = search;
 module.exports.purchase = purchase;
 module.exports.modifyTable = modifyTable;
-module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
