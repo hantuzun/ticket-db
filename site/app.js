@@ -99,7 +99,7 @@ app.post('/purchaseForm', function(req, res) {
 });
 
 //PROFILE
-app.post('/userProfile', function(req, res) {  //NOT IMPLEMENTED
+app.post('/userProfile', function(req, res) {
 	var p = req.body;
 
 	var callback = function(status, result) {
