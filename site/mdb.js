@@ -92,7 +92,7 @@ function showProfile(email, callback) {
 	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
 	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
 	var eventsQuery = "SELECT * FROM events WHERE event_id = ?";
-	queryDB(userTicketsQuery,function(status,result){
+	queryDB(userTicketsQuery, function(status,result){
 		eventsQuery = mysql.format(eventsQuery,result[0].event_id);		
 		for(var key=1; key<result.length; key++ ){
 			if(result.hasOwnProperty(key)){
@@ -102,7 +102,7 @@ function showProfile(email, callback) {
 		console.log("----------"+JSON.stringify(result));				
 		console.log("EVENTS QUERY = "+eventsQuery);
 		queryDB(eventsQuery, callback);
-	} );
+	});
 }
 
 //FOR ADMINS
