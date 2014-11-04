@@ -29,7 +29,7 @@ router.get('/userProfile',function(req,res){
 	var email = "test@test.test";//req.session.username;
 	var callback = function(status, result) {
 		if (status == true) {
-			res.render('userProfile',{res:result});
+			res.render('userProfile',{res:result, username:(req.session.firstName)});
 			console.log("result from queryDB() = "+JSON.stringify(result));
 		} else {
 			res.locals.reason = result;

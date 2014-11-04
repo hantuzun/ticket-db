@@ -1,17 +1,29 @@
 doctype
 html
 	header
-		h1 Hi #{username} here are your tickets:
+		link(rel='stylesheet' href='//cdn.datatables.net/1.10.3/css/jquery.dataTables.css')
+
+		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+
+		script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')		
+		
+		h1 #{username} here are your tickets:
 		
 	body
-		table
-			thead
-				tr
-					for key in Object.keys(res[0])
-						th #{key}
-			tbody
-				for item in res
+		h2 Search results
+		- if (res.length > 0)
+			table.obj(id="table_id")
+				thead
 					tr
-						for value in item
-							td= value				
-
+						th name
+						th venue
+						th date
+				tbody
+					for item in res
+						tr
+							for value in item
+								td= value
+			script
+				$('#table_id').DataTable();
+		- else
+			p No results found					
