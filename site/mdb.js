@@ -88,7 +88,7 @@ function purchase(event_id, email, price, callback) {
 	);
 }
 
-function showProfile(email, callback) {
+function showProfile(email, callback) {//toDo: add query to get the artist info and display it
 	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
 	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
 	var eventsQuery = "SELECT * FROM events WHERE event_id = ?";
