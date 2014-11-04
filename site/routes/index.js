@@ -1,5 +1,6 @@
 var express = require('express');
 var app = require('../app');
+var mdb = require('../mdb');
 var router = express.Router();
 var session = require('cookie-session');
 
@@ -10,7 +11,7 @@ router.get('/', function(req, res) {
   //elem.style.display = 'none';	
  var username = req.session.username;
  console.log('the username = ' + username);
-  res.render('home', { title: 'Events Database'+ username});
+  res.render('home', {title: 'Events Database'+ username});
 });
 
 /* GET login page. */
@@ -24,10 +25,21 @@ else{
 });
 
 /* GET profile page*/
-router.get('/profile',function(req,res){
-	res.send('user profile will go here');
-});
+router.get('/userProfile',function(req,res){
+	var email = "test@test.test";//req.session.username;
+	var callback = function(status, result) {
+		if (status == true) {
+			res.render('userProfile',{res:result});
+			console.log("result from queryDB() = "+JSON.stringify(result));
+		} else {
+			res.locals.reason = result;
+			res.send('could not find profile\n'+res.locals.reason);
+		}
+	};
 
+	mdb.showProfile(email, callback);
+});
+	
 /*GET sign up page*/
 router.get('/register',function(req,res){
 	res.render('signUp');

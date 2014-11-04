@@ -89,10 +89,20 @@ function purchase(event_id, email, price, callback) {
 }
 
 function showProfile(email, callback) {
-	var sql = "SELECT * FROM purchased_tickets WHERE owner = ?";
-	sql = mysql.format(sql, [email]);
-	
-	queryDB(sql, callback);
+	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
+	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
+	var eventsQuery = "SELECT * FROM events WHERE event_id = ?";
+	queryDB(userTicketsQuery,function(status,result){
+		eventsQuery = mysql.format(eventsQuery,result[0].event_id);		
+		for(var key=1; key<result.length; key++ ){
+			if(result.hasOwnProperty(key)){
+				eventsQuery+=(' OR event_id = ' +result[key].event_id);	
+			}
+		}
+		console.log("----------"+JSON.stringify(result));				
+		console.log("EVENTS QUERY = "+eventsQuery);
+		queryDB(eventsQuery, callback);
+	} );
 }
 
 //FOR ADMINS
@@ -112,19 +122,19 @@ function modifyTable(table, updateOrDelete, keyColumn, changeColumn, keyVal, new
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
 
-	client.connect(function(err) {
-		if (err){
-			callback(false, err);
-		}
-	});
+	// client.connect(function(err) {
+	// 	if (err){
+	// 		callback(false, err);
+	// 	}
+	// });
 
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
-				client.end();
+				//client.end();
 				callback(true, res);
 			} else {
-				client.end();
+				//client.end();
 				callback(false, err);
 			}
 		}
