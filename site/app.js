@@ -88,14 +88,27 @@ app.post('/purchaseForm', function(req, res) {
 
 	var callback = function(status, result) {
 		if (status == true) {
-			res.render('purchase-confirmed');
+			res.send('purchase confirmed');
 		} else {
 			res.locals.reason = result;
-			res.send('purchase-failed');
+			res.send('purchase failed');
 		}
 	};
-
-	mdb.purchase(p.event_id, p.email, p.price, callback);
+	
+	var callback_2 = function(status, result) {
+		if (status == true) {
+			res.send('cancellation complete');
+		} else {
+			res.locals.reason = result;
+			res.send('cancellation failed');
+		}
+	};
+	
+	if (p.ticket_id != undefined) {
+		mdb.cancelTicket(p.ticket_id, p.event_id, callback_2);
+	} else {
+		mdb.purchase(p.event_id, p.email, p.price, callback);
+	}
 });
 
 //ADMINCALL

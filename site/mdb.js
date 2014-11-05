@@ -88,6 +88,34 @@ function purchase(event_id, email, price, callback) {
 	);
 }
 
+function cancelTicket(ticket_id, event_id, callback) {
+	var sql1 = "SELECT tickets_left FROM events WHERE event_id = ?";
+	sql1 = mysql.format(sql1, [event_id]);
+	var sql2 = "DELETE FROM purchased_tickets WHERE ticket_id = ?";
+	sql2 = mysql.format(sql2, [ticket_id]);
+	var sql3 = "UPDATE events SET tickets_left = ? WHERE event_id = ?";
+
+	queryDB(sql1, 
+		function(status, result){
+			if (!status) {
+				callback(false, result);
+			} else {
+				numTix = Number(result[0].tickets_left);
+				sql3 = mysql.format(sql3, [numTix+1, event_id]);
+				queryDB(sql2, 
+					function(status, result) {
+						if (!status) {
+							callback(false, result);
+						} else {
+							queryDB(sql3, callback);
+						}
+					}
+				);
+			}
+		}
+	);
+}
+
 function showProfile(email, callback) {
 	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
 	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
@@ -154,12 +182,11 @@ function currDate() {
 	var dd = today.getDate();
 	var mm = today.getMonth()+1; //January is 0!
 	var yyyy = today.getFullYear();
-
 	if(dd<10) { dd='0'+dd; }
 	if(mm<10) { mm='0'+mm; }
-
 	return yyyy+'-'+mm+'-'+dd;
 }
+
 
 module.exports.registerUser = registerUser;
 module.exports.performLogin = performLogin;
@@ -168,3 +195,4 @@ module.exports.purchase = purchase;
 module.exports.modifyTable = modifyTable;
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
+module.exports.cancelTicket = cancelTicket;
