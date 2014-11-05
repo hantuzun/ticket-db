@@ -92,16 +92,20 @@ function showProfile(email, callback) {
 	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
 	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
 	var eventsQuery = "SELECT event_name, venue, DATE_FORMAT(events.date,'%Y-%m-%d') FROM events WHERE event_id = ?";
-	console.log("events query first:::::::" + eventsQuery);
 	queryDB(userTicketsQuery,function(status,userTicketResult){
-		eventsQuery = mysql.format(eventsQuery,userTicketResult[0].event_id);		
-		for(var key=1; key<userTicketResult.length; key++ ){
-			if(userTicketResult.hasOwnProperty(key)){
-				eventsQuery+=(' OR event_id = ' +userTicketResult[key].event_id);	
+		console.log("\nUser ticket result = "+userTicketResult);
+		if(status === true && userTicketResult.hasOwnProperty(0)){
+			eventsQuery = mysql.format(eventsQuery,userTicketResult[0].event_id);		
+			for(var key=1; key<userTicketResult.length; key++ ){
+				if(userTicketResult.hasOwnProperty(key)){
+					eventsQuery+=(' OR event_id = ' +userTicketResult[key].event_id);	
+				}
 			}
+			queryDB(eventsQuery,callback);
 		}
-		console.log("events query == = " + eventsQuery);
-		queryDB(eventsQuery,callback);
+		else{
+			callback(status,{});
+		}
 	});
 }
 
@@ -128,20 +132,11 @@ function showAll(table, callback) {
 
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
-
-	// client.connect(function(err) {
-	// 	if (err){
-	// 		callback(false, err);
-	// 	}
-	// });
-
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
-				//client.end();
 				callback(true, res);
 			} else {
-				//client.end();
 				callback(false, err);
 			}
 		}
@@ -168,3 +163,4 @@ module.exports.purchase = purchase;
 module.exports.modifyTable = modifyTable;
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;
+module.exports.queryDB = queryDB;

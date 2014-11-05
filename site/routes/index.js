@@ -7,11 +7,9 @@ var session = require('cookie-session');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  //var elem = document.getElementById('hideThis');
-  //elem.style.display = 'none';	
- var username = req.session.username;
- console.log('the username = ' + username);
-  res.render('home', {title: 'Events Database'+ username});
+ var userFirstName = req.session.firstname;
+
+  res.render('home', {title: 'Events Database',firstname: userFirstName});
 });
 
 /* GET login page. */
@@ -26,18 +24,23 @@ else{
 
 /* GET profile page*/
 router.get('/userProfile',function(req,res){
-	var email = "test@test.test";//req.session.username;
-	var callback = function(status, result) {
-		if (status == true) {
-			res.render('userProfile',{res:result, username:(req.session.firstName)});
-			console.log("result from queryDB() = "+JSON.stringify(result));
-		} else {
-			res.locals.reason = result;
-			res.send('could not find profile\n'+res.locals.reason);
-		}
-	};
+	var email = req.session.username;
+	if(email===undefined){
+		res.redirect('/login');
+	}
+	else{
+		var callback = function(status, result) {
+			if (status == true) {
+				console.log("\n\nhere is what gets passed to res "+JSON.stringify(result));
+				res.render('userProfile',{res:result, username:(req.session.firstName)});
+			} else {
+				res.locals.reason = result;
+				res.send('could not find profile\n'+res.locals.reason);
+			}
+		};
 
-	mdb.showProfile(email, callback);
+		mdb.showProfile(email, callback);
+	}
 });
 	
 /*GET sign up page*/
@@ -59,6 +62,12 @@ router.get('/admin',function(req,res){
 router.get('/results',function(req,res){
 	res.render('results');
 });
+
+/*GET logout request*/
+router.get('/logout',function(req,res){
+	req.session.destroy();
+	res.redirect('/')
+})
 
 
 module.exports = router;

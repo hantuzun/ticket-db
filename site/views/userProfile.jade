@@ -6,18 +6,17 @@ html
 		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 
 		script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')		
-		
-		h1 #{username} here are your tickets:
-		
+				
 	body
-		h2 Search results
 		- if (res.length > 0)
+			-console.log("gets passssseeeeeeeeeeeeeddddddddddddddd")
+			h1 #{username} here are your tickets:
 			table.obj(id="table_id")
 				thead
 					tr
-						th name
-						th venue
-						th date
+						th Event:
+						th Venue:
+						th Date:
 				tbody
 					for item in res
 						tr
@@ -26,4 +25,11 @@ html
 			script
 				$('#table_id').DataTable();
 		- else
-			p No results found					
+			p 
+			|You havn't bought any tickets!
+			br
+			|Buy some  
+			button#btnSearch(type='button',onClick="window.location.href='/search'") here
+		button#btnlogout(type='button',onClick="window.location.href='/logout'") logout
+
+

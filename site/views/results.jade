@@ -16,11 +16,15 @@ html
                     tr
                         for key in Object.keys(res[0])
                             th #{key}
+                        th= ""    
                 tbody
                     for item in res
                         tr
                             for value in item
                                 td= value
+                            var event_id = item.event_id
+                            td
+                             button#btnPurchase(type='button',onClick="")  event_id  
 
 
             script

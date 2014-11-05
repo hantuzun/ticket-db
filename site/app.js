@@ -4,6 +4,7 @@ var express = require('express');
 var path = require('path');
 var routes = require('./routes/index');
 
+var mysql = require('mysql');
 var mdb = require('./mdb'); //mysql file
 var expressSession = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -24,11 +25,13 @@ app.use('/',routes);
 //SUBMIT LOGIN INFO
 app.post('/loginForm',function(req,res){
 	var p = req.body;
-	req.session.username = p.email; 
+	req.session.username = p.email;
+	var queryString = 'SELECT firstname FROM users WHERE email ="'+p.email+'"';
+	mdb.queryDB(queryString,function(status,firstname){
+		req.session.firstname = firstname[0].firstname;
+	});
 	var callback = function(status, result) {
-		if (status == true && result.length == 1) {
-			 
-			console.log("here is the session = "+req.session.username);   
+		if (status == true && result.length == 1) { 
 			/*if (isAdmin(p.email, p.password)) { //TODO: REQ.SESSION DOESN'T EXIST YET
 				res.session.role = 'admin';
 			} else {
@@ -64,9 +67,9 @@ app.post('/registrationForm',function(req,res){
 //SEARCH
 app.post('/searchForm', function(req, res){
 	var p = req.body;
-
 	var callback = function(status, result) {
 		if (status == true) {
+			console.log("\n\n\nthe search results are "+JSON.stringify(result)+"\n\n");
 			res.render('results', {res: result});
 		} else {
 			res.locals.reason = result;
