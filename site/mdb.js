@@ -58,7 +58,7 @@ function search(table, filters, callback) {
 
 function purchase(event_id, email, price, callback) {
 	var sql1 = "SELECT tickets_left FROM events WHERE event_id = ?";
-	sql1 = mysql.format(sql, [event_id]);
+	sql1 = mysql.format(sql1, [event_id]);
 	var sql2 = "UPDATE events SET tickets_left = ? WHERE event_id = ?";
 	var sql3 = "INSERT INTO purchased_tickets (event_id, owner, date_of_purchase, price) VALUES(?, ?, ?, ?)";
 	sql3 = mysql.format(sql3, [event_id, email, currDate()/*Works?*/, price]);
@@ -67,6 +67,8 @@ function purchase(event_id, email, price, callback) {
 		function(status, result){
 			if (!status) {
 				callback(false, result);
+            } else if (result.length == 0) {
+                callback(false, "No event found.");
 			} else {
 				numTix = Number(result[0].tickets_left);
 				if (numTix < 1) {
