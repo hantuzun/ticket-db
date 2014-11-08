@@ -45,7 +45,7 @@ function search(table, filters, callback) {
 		callback(false, err);
 	}
 
-	if (filters) {
+	if (filters.length > 0) {
 		var array = []
 		for(var k in filters) {
 			array.push(k + " = \'" + filters[k] + "\'");
@@ -134,6 +134,7 @@ function showAll(table, callback) {
 
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
+	console.log(requestStr);
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
