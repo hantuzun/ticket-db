@@ -5,24 +5,31 @@ html
 
 		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 
-		script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')		
+		script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')
+		script.
+			$(document).ready(function(){
+				$('.cancelButton').clck(function(){})
+				})		
 				
 	body
 		- if (res.length > 0)
 			h1 #{username} here are your tickets:
-			table.obj(id="table_id")
+			table.obj(id="table_user")
 				thead
 					tr
 						th Event:
 						th Venue:
 						th Date:
+						th= "" 
 				tbody
 					for item in res
 						tr
 							for value in item
 								td= value
+							td
+								button#btnCancel(type='button',class="cancelButton") Cancel	
 			script
-				$('#table_id').DataTable();
+				$('#table_user').DataTable();
 		- else
 			p 
 			|You havn't bought any tickets!

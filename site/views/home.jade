@@ -8,13 +8,16 @@ html
 				h1 Welcome to #{title} #{firstname}
 				button#btnSearch(type='button',onClick="window.location.href='/search'") Search
 				br
+				p
 				button#btnSearch(type='button',onClick="window.location.href='/userProfile'") View Profile
 			-else
 				h1 Welcome to #{title}
 				button#btnLogin(type='button',onClick="window.location.href='/login'") login
 				br
-				button#btnRegister(type='button',onClick="window.location.href='/signUp'") Register
+				p
+				button#btnRegister(type='button',onClick="window.location.href='/register'") Register
 				br
+				p
 				button#btnSearch(type='button',onClick="window.location.href='/search'") Search
 			
 

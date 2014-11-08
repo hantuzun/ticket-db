@@ -9,7 +9,7 @@ var session = require('cookie-session');
 router.get('/', function(req, res) {
  var userFirstName = req.session.firstname;
 
-  res.render('home', {title: 'Events Database',firstname: userFirstName});
+  res.render('home', {title: 'Events Database Prototype',firstname: userFirstName});
 });
 
 /* GET login page. */

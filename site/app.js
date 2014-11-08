@@ -69,6 +69,7 @@ app.post('/searchForm', function(req, res){
 	var p = req.body;
 	var callback = function(status, result) {
 		if (status == true) {
+			//console.log("\n\n\nthe search results are "+JSON.stringify(result)+"\n\n");
 			res.render('results', {res: result});
 		} else {
 			res.locals.reason = result;
@@ -93,7 +94,7 @@ app.post('/purchaseForm', function(req, res) {
 			res.send('purchase confirmed');
 		} else {
 			res.locals.reason = result;
-			res.send('purchase failed');
+			res.send('purchase failed: ' + result);
 		}
 	};
 	
@@ -105,10 +106,11 @@ app.post('/purchaseForm', function(req, res) {
 			res.send('cancellation failed');
 		}
 	};
-	
+
 	if (p.ticket_id != undefined) {
 		mdb.cancelTicket(p.ticket_id, p.event_id, callback_2);
 	} else {
+        console.log(p.event_id);
 		mdb.purchase(p.event_id, p.email, p.price, callback);
 	}
 });
