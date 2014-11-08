@@ -104,14 +104,14 @@ app.post('/purchaseForm', function(req, res) {
 			res.send('cancellation complete');
 		} else {
 			res.locals.reason = result;
-			res.send('cancellation failed');
+			res.send('cancellation failed: ' + result);
 		}
 	};
     
-    var email = req.session.username;
 	if (p.ticket_id != undefined) {
-		mdb.cancelTicket(p.ticket_id, email, p.event_id, callback_2);
+		mdb.cancelTicket(p.ticket_id, p.event_id, callback_2);
 	} else {
+        var email = req.session.username;
 		mdb.purchase(p.event_id, email, callback);
 	}
 });

@@ -90,6 +90,34 @@ function purchase(event_id, email, callback) {
 	);
 }
 
+function cancelTicket(ticket_id, event_id, callback) {
+	var sql1 = "SELECT tickets_left FROM events WHERE event_id = ?";
+	sql1 = mysql.format(sql1, [event_id]);
+	var sql2 = "DELETE FROM purchased_tickets WHERE ticket_id = ?";
+	sql2 = mysql.format(sql2, [ticket_id]);
+	var sql3 = "UPDATE events SET tickets_left = ? WHERE event_id = ?";
+
+	queryDB(sql1, 
+		function(status, result){
+			if (!status) {
+				callback(false, result);
+			} else {
+				numTix = Number(result[0].tickets_left);
+				sql3 = mysql.format(sql3, [numTix+1, event_id]);
+				queryDB(sql2, 
+					function(status, result) {
+						if (!status) {
+							callback(false, result);
+						} else {
+							queryDB(sql3, callback);
+						}
+					}
+				);
+			}
+		}
+	);
+}
+
 function showProfile(email, callback) {
 	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
 	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
@@ -126,9 +154,6 @@ function showProfile(email, callback) {
 	});
 }
 
-function cancel(event_id,email){
-
-}
 
 //FOR ADMINS
 function modifyTable(table, action, keyColumn, keyVal, changeColumn, newVal, bundle, callback) {
@@ -184,6 +209,7 @@ module.exports.registerUser = registerUser;
 module.exports.performLogin = performLogin;
 module.exports.search = search;
 module.exports.purchase = purchase;
+module.exports.cancelTicket = cancelTicket;
 module.exports.modifyTable = modifyTable;
 module.exports.showAll = showAll;
 module.exports.showProfile = showProfile;

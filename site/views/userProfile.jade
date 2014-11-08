@@ -1,49 +1,48 @@
 doctype
 html
-	header
-		link(rel='stylesheet' href='//cdn.datatables.net/1.10.3/css/jquery.dataTables.css')
+    header
+        link(rel='stylesheet' href='//cdn.datatables.net/1.10.3/css/jquery.dataTables.css')
 
-		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+        script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
 
-		script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')
-		script.
-			$(document).ready(function(){
-				$('.cancelButton').click(function(){
-					var ticket_id = $(this).closest('tr').find('td:fourth').text();
-					var event_id = $(this.closest('tr').find('td:first').text());
-					$form = $("<form action='/purchase' method='POST'></form>");
-					$form.append('<input type="hidden" name="ticket_id" value=' + ticket_id + '/>');
-					$form.append('<input type="hidden" name="event_id" value=' + eventName + '/>');
-					$form.submit();
-					});
-				});		
-				
-	body
-		- if (res.length > 0)
-			h1 #{username} here are your tickets:
-			table.obj(id="table_user")
-				thead
-					tr
-						th Event:
-						th Venue:
-						th Date:
-						th Ticket Number:
-						th= "" 
-				tbody
-					for item in res
-						tr
-							for value in item
-								td= value
-							td
-								button#btnCancel(type='button',class="cancelButton") Cancel	
-			script
-				$('#table_user').DataTable();
-		- else
-			p 
-			|You havn't bought any tickets!
-			br
-			|Buy some  
-			button#btnSearch(type='button',onClick="window.location.href='/search'") here
-		button#btnlogout(type='button',onClick="window.location.href='/logout'") logout
+        script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')
+        script.
+            $(document).ready(function(){
+                $('.cancelButton').click(function(){
+                    var ticket_id = $(this).closest('tr').find('td:eq(4)').text();
+                    var event_id = $(this).closest('tr').find('td:eq(3)').text();
+                    $form = $("<form action='/purchaseForm' method='POST'></form>");
+                    $form.append('<input type="hidden" name="ticket_id" value=' + ticket_id + '/>');
+                    $form.append('<input type="hidden" name="event_id" value=' + event_id + '/>');
+                    $form.submit();
+                });
+            });
+                
+    body
+        - if (res.length > 0)
+            h1 #{username} here are your tickets:
+            table.obj(id="table_user")
+                thead
+                    tr
+                        th Event:
+                        th Venue:
+                        th Date:
+                        th Ticket Number:
+                        th= "" 
+                tbody
+                    for item in res
+                        tr
+                            for value in item
+                                td= value
+                            td
+                                button#btnCancel(type='button',class='cancelButton') Cancel    
+            script
+                $('#table_user').DataTable();
 
-
+        - else
+            p 
+            |You havn't bought any tickets!
+            br
+            |Buy some  
+            button#btnSearch(type='button',onClick="window.location.href='/search'") here
+        button#btnlogout(type='button',onClick="window.location.href='/logout'") logout
