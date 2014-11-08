@@ -108,10 +108,9 @@ app.post('/purchaseForm', function(req, res) {
 	};
 
 	if (p.ticket_id != undefined) {
-		mdb.cancelTicket(p.ticket_id, p.event_id, callback_2);
+		mdb.cancelTicket(p.ticket_id, p.email, p.event_id, callback_2);
 	} else {
-        console.log(p.event_id);
-		mdb.purchase(p.event_id, p.email, p.price, callback);
+		mdb.purchase(p.event_id, p.email, callback);
 	}
 });
 
@@ -144,23 +143,6 @@ app.post('/adminForm', function(req, res) {
 		mdb.modifyTable(p.table, uORd, p.keyCol, p.keyVal, p.changeCol, p.newVal, callback);
 	}
 });
-
-// //PROFILE
-// app.post('/userProfile', function(req, res) {
-// 	var email = req.session.username;
-
-// 	var callback = function(status, result) {
-// 		console.log(result);
-// 		if (status == true) {
-// 			res.render('userProfile');
-// 		} else {
-// 			res.locals.reason = result;
-// 			res.send('could not find profile');
-// 		}
-// 	};
-
-// 	mdb.showProfile(email, callback);
-// });
 
 function isAdmin(e, p) {
 	return (e == 'admin' && p == 'pass');
