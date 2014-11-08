@@ -28,8 +28,13 @@ html
                 table.obj(id="table_id")
                     thead
                         tr
-                            for key in Object.keys(res[0])
-                                th #{key}
+                            th= "Event ID" 
+                            th= "Event Name"
+                            th= "Venue"
+                            th= "Date"
+                            th= "Available Tickets"
+                            th= "Price"
+                            th= "Artist"
                             th= ""
                     tbody
                         for item in res
@@ -38,6 +43,9 @@ html
                                     td= value
                                 td
                                     button#btnPurchase(type='button', class="purchaseButton")  Purchase
+                script
+                    $('#table_id').DataTable({"aoColumnDefs": [{ "bVisible": false, "aTargets": [0] }]});
+
             - else
                 table.obj(id="table_id") 
                     thead
@@ -49,8 +57,7 @@ html
                             tr
                                 for value in item
                                     td= value
-                                    
-            script
-                $('#table_id').DataTable(); 
+                script
+                    $('#table_id').DataTable(); 
         - else 
             p No results found
