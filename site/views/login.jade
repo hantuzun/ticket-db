@@ -1,19 +1,24 @@
 doctype
 html
-	title #{title}
+    title #{title}
 
 body
-	header
-		h1 Login
-			form(method='post',action='/loginForm')
-				input(type='text',placeholder='email',name='email')
-				input(type='password',placeholder='password',name='password')
-				input(type='submit',name='submit',value='submit')
-		
-			-if(error == 'true'){
-				p incorrect username or password
-			-}	
-		block content
-			|not a member?
-			|sign up here:
-			button(type='button',onClick='window.location.href="/register"') Sign Up!			
+    header
+        script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+        script(src='http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js')
+        script.
+            var hashPassword = function() {
+                $('#pw').val( CryptoJS.MD5($('#pw').val()) );
+            }
+        h1 Login
+            form(method='post',action='/loginForm',id='loginForm')
+                input(type='text',placeholder='email',name='email')
+                input(type='password',placeholder='password',name='password',id='pw')
+                input(type='submit',name='submit',value='Log in',onclick='hashPassword()')
+
+            - if (error == 'true')
+                p incorrect username or password
+        block content
+            |not a member?
+            |sign up here:
+            button(type='button',onClick='window.location.href="/register"') Sign Up!
