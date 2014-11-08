@@ -22,6 +22,8 @@ html
 
 
     body
+        - console.log(JSON.stringify(res[0].event_id));
+        - console.log;
         h2 Search results
         - if (res.length > 0)
             table.obj(id="table_id")
@@ -29,14 +31,16 @@ html
                     tr
                         for key in Object.keys(res[0])
                             th #{key}
-                        th= ""
+                        - if (typeof res[0].event_id != "undefined")
+                            th= ""
                 tbody
                     for item in res
                         tr
                             for value in item
                                 td= value
-                            td
-                             button#btnPurchase(type='button', class="pbutton")  Purchase
+                            - if (typeof res[0].event_id != "undefined")
+                                td
+                                    button#btnPurchase(type='button', class="pbutton") Purchase
 
             script
                 $('#table_id').DataTable(); 
