@@ -10,7 +10,7 @@ html
 			$(document).ready(function(){
 				$('.cancelButton').click(function(){
 					var ticket_id = $(this).closest('tr').find('td:fourth').text();
-					var event_id = $(this.closest('tr').find('td:fourth').text());
+					var event_id = $(this.closest('tr').find('td:first').text());
 					$form = $("<form action='/purchase' method='POST'></form>");
 					$form.append('<input type="hidden" name="ticket_id" value=' + ticket_id + '/>');
 					$form.append('<input type="hidden" name="event_id" value=' + eventName + '/>');
