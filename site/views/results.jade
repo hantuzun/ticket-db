@@ -8,10 +8,9 @@ html
         script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
         script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')
         script.
-            $(document).ready(function(){
-                $('.pbutton').click(function(){
+            $(document).ready(function(){    //purchase
+                $('.purchaseButton').click(function(){
                     var eid = $(this).closest('tr').find('td:first').text();
-                    var email = req.session.username;
 
                     //IF NOT LOGGED IN, RETURN!!!!!
                     $form = $("<form action='/purchaseForm' method='POST'></form>");
@@ -23,21 +22,34 @@ html
 
     body
         h2 Search results
+        
         - if (res.length > 0)
-            table.obj(id="table_id")
-                thead
-                    tr
-                        for key in Object.keys(res[0])
-                            th #{key}
-                        th= ""
-                tbody
-                    for item in res
+            - if (isEvents == true)
+                table.obj(id="table_id")
+                    thead
                         tr
-                            for value in item
-                                td= value
-                            td
-                             button#btnPurchase(type='button', class="pbutton")  Purchase
-
+                            for key in Object.keys(res[0])
+                                th #{key}
+                            th= ""
+                    tbody
+                        for item in res
+                            tr
+                                for value in item
+                                    td= value
+                                td
+                                    button#btnPurchase(type='button', class="purchaseButton")  Purchase
+            - else
+                table.obj(id="table_id") 
+                    thead
+                        tr
+                            for key in Object.keys(res[0])
+                                th #{key}
+                    tbody
+                        for item in res
+                            tr
+                                for value in item
+                                    td= value
+                                    
             script
                 $('#table_id').DataTable(); 
         - else 

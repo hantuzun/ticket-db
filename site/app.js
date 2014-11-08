@@ -67,13 +67,15 @@ app.post('/registrationForm',function(req,res){
 //SEARCH
 app.post('/searchForm', function(req, res){
 	var p = req.body;
+    var eventsOrNot = true ? (p.table == 'events') : false;
+    
 	var callback = function(status, result) {
 		if (status == true) {
 			//console.log("\n\n\nthe search results are "+JSON.stringify(result)+"\n\n");
-			res.render('results', {res: result});
+			res.render('results', {res: result, isEvents: eventsOrNot});
 		} else {
 			res.locals.reason = result;
-			res.send('search-failed' + result);  //TODO: alert?
+			res.send('search-failed' + result);
 		}
 	};
 	
@@ -106,11 +108,12 @@ app.post('/purchaseForm', function(req, res) {
 			res.send('cancellation failed');
 		}
 	};
-
+    
+    var email = req.session.username;
 	if (p.ticket_id != undefined) {
-		mdb.cancelTicket(p.ticket_id, p.email, p.event_id, callback_2);
+		mdb.cancelTicket(p.ticket_id, email, p.event_id, callback_2);
 	} else {
-		mdb.purchase(p.event_id, p.email, callback);
+		mdb.purchase(p.event_id, email, callback);
 	}
 });
 
