@@ -69,7 +69,6 @@ app.post('/searchForm', function(req, res){
 	var p = req.body;
 	var callback = function(status, result) {
 		if (status == true) {
-			console.log("\n\n\nthe search results are "+JSON.stringify(result)+"\n\n");
 			res.render('results', {res: result});
 		} else {
 			res.locals.reason = result;

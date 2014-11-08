@@ -21,13 +21,14 @@ html
                     for item in res
                         tr
                             for value in item
+                                -console.log("can i print here?  "+item.event_id)
                                 td= value
-                            var event_id = item.event_id
+                            -var event_id = item.event_id
                             td
-                             button#btnPurchase(type='button',onClick="")  event_id  
+                             button#btnPurchase(type='button',onClick="") Purchase 
 
 
-            script
+            script.
                 $('#table_id').DataTable(); 
         - else 
             p No results found
