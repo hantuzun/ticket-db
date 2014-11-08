@@ -78,7 +78,7 @@ app.post('/searchForm', function(req, res){
 	};
 	
 	var filters = {};
-	if (p.artist != '') { filters.artist = p.artist; }
+	if (p.artist != '') { filters.artist_name = p.artist; }
 	if (p.venue != '') { filters.venue = p.venue; }
 	if (p.date != '') { filters.date = p.date; }
 
