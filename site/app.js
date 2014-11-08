@@ -88,7 +88,6 @@ app.post('/searchForm', function(req, res){
 //PURCHASE
 app.post('/purchaseForm', function(req, res) {
 	var p = req.body;
-
 	var callback = function(status, result) {
 		if (status == true) {
 			res.send('purchase confirmed');

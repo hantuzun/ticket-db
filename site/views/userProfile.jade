@@ -8,8 +8,15 @@ html
 		script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')
 		script.
 			$(document).ready(function(){
-				$('.cancelButton').clck(function(){})
-				})		
+				$('.cancelButton').click(function(){
+					var ticket_id = $(this).closest('tr').find('td:fourth').text();
+					var event_id = $(this.closest('tr').find('td:fourth').text());
+					$form = $("<form action='/purchase' method='POST'></form>");
+					$form.append('<input type="hidden" name="ticket_id" value=' + ticket_id + '/>');
+					$form.append('<input type="hidden" name="event_id" value=' + eventName + '/>');
+					$form.submit();
+					});
+				});		
 				
 	body
 		- if (res.length > 0)
@@ -20,6 +27,7 @@ html
 						th Event:
 						th Venue:
 						th Date:
+						th Ticket Number:
 						th= "" 
 				tbody
 					for item in res

@@ -11,7 +11,6 @@ html
             $(document).ready(function(){
                 $('.pbutton').click(function(){
                     var eid = $(this).closest('tr').find('td:first').text();
-                    var email = req.session.username;
 
                     //IF NOT LOGGED IN, RETURN!!!!!
                     $form = $("<form action='/purchaseForm' method='POST'></form>");

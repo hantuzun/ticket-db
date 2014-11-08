@@ -28,7 +28,6 @@ function search(table, filters, callback) {
 	// filters is a js object
 	// if table = "events" or "artists" and filters = {"venue": "Mungyeong", "date": "2015-03-24"}
 	// when I query 'sql' on Sequel it returns the expected results
-	console.log("here is the filter that is passed: "+ JSON.stringify(filters));
 	var sql = "SELECT DISTINCT ? \
 	    FROM artist_loc \
 	    JOIN events ON artist_loc.event_id = events.event_id \
@@ -94,22 +93,41 @@ function purchase(event_id, email, callback) {
 function showProfile(email, callback) {
 	var userTicketsQuery = "SELECT event_id FROM purchased_tickets WHERE owner = ?";
 	userTicketsQuery = mysql.format(userTicketsQuery, [email]);
-	var eventsQuery = "SELECT event_name, venue, DATE_FORMAT(events.date,'%Y-%m-%d') FROM events WHERE event_id = ?";
+	var eventsQuery = "SELECT event_name, venue, DATE_FORMAT(events.date,'%Y-%m-%d'),event_id FROM events WHERE event_id = ?";
+	var ticketQuery = "SELECT * FROM purchased_tickets WHERE owner = ?";
+	ticketQuery = mysql.format(ticketQuery,[email]);
 	queryDB(userTicketsQuery,function(status,userTicketResult){
-		console.log("\nUser ticket result = "+userTicketResult);
-		if(status === true && userTicketResult.hasOwnProperty(0)){
+			if(status === true && userTicketResult.hasOwnProperty(0)){
 			eventsQuery = mysql.format(eventsQuery,userTicketResult[0].event_id);		
 			for(var key=1; key<userTicketResult.length; key++ ){
 				if(userTicketResult.hasOwnProperty(key)){
 					eventsQuery+=(' OR event_id = ' +userTicketResult[key].event_id);	
 				}
 			}
-			queryDB(eventsQuery,callback);
+			queryDB(ticketQuery,function(result,ticketInfo){
+				queryDB(eventsQuery,function(result,eventInfo){
+					for(var k in eventInfo){
+						for(var i in ticketInfo){
+							if(eventInfo[k].event_id == ticketInfo[i].event_id && ticketInfo[i].used!=true){
+								eventInfo[k].ticket_id = ticketInfo[i].ticket_id;
+								ticketInfo[i].used = true;
+							}
+						}
+					}
+					callback(result,eventInfo);
+				});
+				
+			});
+			
 		}
 		else{
 			callback(status,{});
 		}
 	});
+}
+
+function cancel(event_id,email){
+
 }
 
 //FOR ADMINS
@@ -135,7 +153,6 @@ function showAll(table, callback) {
 
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
-	console.log(requestStr);
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {
