@@ -10,7 +10,7 @@ html
         script.
             $(document).ready(function(){
                 $('.purchaseButton').click(function(){
-                    var eid = $(this).closest('tr').find('td:first').text();
+                    var eid = $(this).closest('tr').find('td:eq(0)').text();
 
                     //IF NOT LOGGED IN, RETURN!!!!!
                     $form = $("<form action='/purchaseForm' method='POST'></form>");
@@ -44,7 +44,7 @@ html
                                 td
                                     button#btnPurchase(type='button', class="purchaseButton")  Purchase
                 script
-                    $('#table_id').DataTable({"aoColumnDefs": [{ "bVisible": false, "aTargets": [0] }]});
+                    $('#table_id').DataTable(); //{"aoColumnDefs": [{ "bVisible": false, "aTargets": [0] }]});
 
             - else
                 table.obj(id="table_id") 

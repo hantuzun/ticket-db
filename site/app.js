@@ -112,6 +112,11 @@ app.post('/purchaseForm', function(req, res) {
 		mdb.cancelTicket(p.ticket_id, p.event_id, callback_2);
 	} else {
         var email = req.session.username;
+        if (email == undefined || email == null) {
+            res.render('login');
+            return;
+        }
+        console.log(p.event_id);
 		mdb.purchase(p.event_id, email, callback);
 	}
 });
