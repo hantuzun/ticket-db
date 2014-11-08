@@ -45,7 +45,7 @@ function search(table, filters, callback) {
 		callback(false, err);
 	}
 
-	if (filters) {
+	if (filters.length > 0) {
 		var array = []
 		for(var k in filters) {
 			array.push(k + " = \'" + filters[k] + "\'");
@@ -56,12 +56,11 @@ function search(table, filters, callback) {
 	queryDB(sql, callback);
 }
 
-function purchase(event_id, email, price, callback) {
-	var sql1 = "SELECT tickets_left FROM events WHERE event_id = ?";
+function purchase(event_id, email, callback) {
+	var sql1 = "SELECT tickets_left, price_per_ticket FROM events WHERE event_id = ?";
 	sql1 = mysql.format(sql1, [event_id]);
 	var sql2 = "UPDATE events SET tickets_left = ? WHERE event_id = ?";
 	var sql3 = "INSERT INTO purchased_tickets (event_id, owner, date_of_purchase, price) VALUES(?, ?, ?, ?)";
-	sql3 = mysql.format(sql3, [event_id, email, currDate()/*Works?*/, price]);
 
 	queryDB(sql1, 
 		function(status, result){
@@ -70,7 +69,8 @@ function purchase(event_id, email, price, callback) {
             } else if (result.length == 0) {
                 callback(false, "No event found.");
 			} else {
-				numTix = Number(result[0].tickets_left);
+				var numTix = Number(result[0].tickets_left);
+                var price = Number(result[0].price_per_ticket);
 				if (numTix < 1) {
 					callback(false, "SOLD OUT");
 				} else {
@@ -80,6 +80,7 @@ function purchase(event_id, email, price, callback) {
 							if (!status) {
 								callback(false, result);
 							} else {
+                                sql3 = mysql.format(sql3, [event_id, email, currDate()/*Works?*/, price]);
 								queryDB(sql3, callback);
 							}
 						}
@@ -134,6 +135,7 @@ function showAll(table, callback) {
 
 //GENERIC DB QUERY FUNCTION
 function queryDB(requestStr, callback) {
+	console.log(requestStr);
 	client.query(requestStr,
 		function (err, res) {
 			if (! err) {

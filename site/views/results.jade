@@ -8,14 +8,20 @@ html
         script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
         script(src='//cdn.datatables.net/1.10.3/js/jquery.dataTables.js')
         script.
-            function purchase(id) {
-                //IF NOT LOGGED IN, RETURN!!!!!
-                $form = $("<form action='/purchaseForm' method='POST'></form>");
-                $form.append('<input type="hidden" name="event_id" value=' + id + '/>');
-                $form.submit();
-            } 
-        
-    body   
+            $(document).ready(function(){
+                $('.pbutton').click(function(){
+                    var eid = $(this).closest('tr').find('td:first').text();
+                    var email = req.session.username;
+
+                    //IF NOT LOGGED IN, RETURN!!!!!
+                    $form = $("<form action='/purchaseForm' method='POST'></form>");
+                    $form.append('<input type="hidden" name="event_id" value=' + eid + '/>');
+                    $form.submit();
+                });
+            });
+
+
+    body
         h2 Search results
         - if (res.length > 0)
             table.obj(id="table_id")
@@ -30,8 +36,8 @@ html
                             for value in item
                                 td= value
                             td
-                                // should be "purchase(item.event_id)" instead of "2"
-                                button#btnPurchase(type='button', onClick='purchase(2)') Purchase
+                             button#btnPurchase(type='button', class="pbutton")  Purchase
+
             script
                 $('#table_id').DataTable(); 
         - else 
