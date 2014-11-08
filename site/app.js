@@ -125,7 +125,7 @@ app.post('/adminForm', function(req, res) {
 			res.send('change made');
 		} else {
 			res.locals.reason = result;
-			res.send('request failed');
+			res.send('request failed: ' + result);
 		}
 	};
 
@@ -141,14 +141,24 @@ app.post('/adminForm', function(req, res) {
 	if (p.action == undefined) {
 		mdb.showAll(p.table, callback_2);
 	} else {
-		var uORd = true ? (p.action == 'upd') : false;
-		mdb.modifyTable(p.table, uORd, p.keyCol, p.keyVal, p.changeCol, p.newVal, callback);
+		var act;
+        var bundle;
+        if (p.action == 'upd')
+            act = 1;
+        else if (p.action == 'del')
+            act = 2;
+        else if (p.action == 'ins')
+            act = 3;
+            if (p.table == 'artists')
+                bundle = [p.art_name, p.art_info];
+            else if (p.table == 'events')
+                bundle = [p.eid, p.ename, p.venue, p.date, p.size, p.num_tix, p.price];
+            else if (p.table == 'users')
+                bundle = [p.email, p.pass, p.fname, p.lname];
+		mdb.modifyTable(p.table, act, p.keyCol, p.keyVal, p.changeCol, p.newVal, bundle, callback);
 	}
 });
 
-function isAdmin(e, p) {
-	return (e == 'admin' && p == 'pass');
-}
 
 //catch 404
 app.use(function(req,res,next){

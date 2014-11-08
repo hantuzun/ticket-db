@@ -113,15 +113,18 @@ function showProfile(email, callback) {
 }
 
 //FOR ADMINS
-function modifyTable(table, updateOrDelete, keyColumn, keyVal, changeColumn, newVal, callback) {
+function modifyTable(table, action, keyColumn, keyVal, changeColumn, newVal, bundle, callback) {
 	var sql;
-	if (updateOrDelete) {
+	if (action == 1) {
 		sql = "UPDATE ?? SET ?? = ? WHERE ?? = ?";
 		sql = mysql.format(sql, [table, changeColumn, newVal, keyColumn, keyVal]);
-	} else {
+	} else if (action == 2) {
 		sql = "DELETE FROM ?? WHERE ?? = ?";
 		sql = mysql.format(sql, [table, keyColumn, keyVal]);
-	}
+	} else if (action == 3) {
+        var addstr = "'" + bundle.join("','") + "'";
+        sql = "INSERT INTO "+table+" VALUES ("+addstr+")";
+    }
 
 	queryDB(sql, callback);
 }

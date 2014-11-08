@@ -1,72 +1,111 @@
 doctype
 html
-	header
-		h1 Super Secret Admin Panel
-		
-		script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
-		script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js')
-		script(type='text/javascript').
-			$(document).ready(function() {
-				$('#mo').hide();
-			});
+    header
+        h1 Super Secret Admin Panel
+        
+        script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js')
+        script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js')
+        script(type='text/javascript').
+            function hideAll() {
+                $('#de_mo').hide();
+                $('#mo').hide();
+                $('#in_art').hide();
+                $('#in_evn').hide();
+                $('#in_usr').hide();
+            }
+            $(document).ready(function() {
+                hideAll();
+                $('#de_mo').show();
+            });
+            
+            function tableChange() {
+                if ($('#s2').val() == 'ins') {
+                    hideAll();
+                    var $a = $('#in_art');
+                    var $e = $('#in_evn');
+                    var $u = $('#in_usr');
+                    var table = $('#s1').val();
+                    
+                    if (table == 'artists') { $a.show(); }
+                    else if (table == 'events') { $e.show(); }
+                    else if (table == 'users') { $u.show(); }
+                    else if (table == 'purchased_tickets') {
+                        alert("Cannot manually add ticket");
+                    }
+                }
+            }
 
-			function dmChange() {
-				var $m = $('#mo');
-				if ($('#s2').val() == 'upd') { $m.show(); } 
-				else { $m.hide(); }
-			}
+            function actionChange() {
+                hideAll();
+                var $dm = $('#de_mo');
+                var $m = $('#mo');
+                var act = $('#s2').val();
+                
+                if (act == 'del') { $dm.show(); }
+                else if (act == 'upd') { $dm.show(); $m.show(); }
+                else if (act == 'ins') { tableChange(); }
+            }
 
-			function getvals() {
-				$('#t1').val($('#s1').val());
-				$('#t2').val($('#s2').val());
-			}
-
-			/*function viewUsers() {
-				$.post('/adminForm', {table: 'users'});
-			}
-			function viewTickets() {
-				$.post('/adminForm', {table: 'purchased_tickets'});
-			}*/
+            function getvals() {
+                $('#t1').val($('#s1').val());
+                $('#t2').val($('#s2').val());
+            }
 
 
-	div(id='d1')
-		| table to alter:
-		select(id='s1')
-			option(value='artists') artists
-			option(value='events') events
-			option(value='tickets') tickets
-			option(value='users') users
+    div(id='d1')
+        | table to alter:
+        select(id='s1', onchange="tableChange()")
+            option(value='artists') artists
+            option(value='events') events
+            option(value='purchased_tickets') tickets
+            option(value='users') users
 
-		select(id='s2' onchange="dmChange()")
-			option(value='del') delete
-			option(value='upd') update
+        select(id='s2', onchange="actionChange()")
+            option(value='del') delete
+            option(value='upd') update
+            option(value='ins') insert
 
-		p
-		form(method='post', action = '/adminForm')
-			input(type='text', placeholder='where', name='keyCol')
-			| = 
-			input(type='text', placeholder='value', name='keyVal')
-			input(type='hidden', name='table', id='t1')
-			input(type='hidden', name='action', id='t2')
-			div(id='mo')
-				p
-				input(type='text', placeholder='set column', name='changeCol')
-				| to  
-				input(type='text', placeholder='new value', name='newVal')
-			input(type='submit', name='submit', onclick='getvals()')
+        p
+        form(method='post', action = '/adminForm')
+            input(type='hidden', name='table', id='t1')
+            input(type='hidden', name='action', id='t2')
+            div(id='de_mo')
+                input(type='text', placeholder='where', name='keyCol')
+                | = 
+                input(type='text', placeholder='value', name='keyVal')
+            div(id='mo')
+                p
+                input(type='text', placeholder='set column', name='changeCol')
+                | to  
+                input(type='text', placeholder='new value', name='newVal')
 
-	br
-	br
-	br
-	p
-	form(method='post', action = '/adminForm')
-		input(type='hidden', name='table', value='users')
-		input(type='submit', name='submit', value='Display Users')
-	//div
-		//button#btnU(type='button',onClick="viewUsers()") View all Users
-	p
-	form(method='post', action = '/adminForm')
-		input(type='hidden', name='table', value='purchased_tickets')
-		input(type='submit', name='submit', value='Display Tickets')
-	//div
-		//button#btnT(type='button',onClick="viewTickets()") View all Tickets
+            div(id='in_art')
+                input(type='text', placeholder='name', name='art_name')
+                input(type='text', placeholder='info', name='art_info')
+            div(id='in_evn')
+                input(type='text', placeholder='event id', name='eid')
+                input(type='text', placeholder='event name', name='ename')
+                input(type='text', placeholder='venue', name='venue')
+                input(type='text', placeholder='date', name='date')
+                input(type='text', placeholder='size', name='size')
+                input(type='text', placeholder='tickets avail', name='num_tix')
+                input(type='text', placeholder='price', name='price')
+            div(id='in_usr')
+                input(type='text', placeholder='email', name='email')
+                input(type='text', placeholder='password', name='pass')
+                input(type='text', placeholder='first name', name='fname')
+                input(type='text', placeholder='last name', name='lname')
+                
+            input(type='submit', name='submit', onclick='getvals()')
+
+    br
+    br
+    br
+    p
+    form(method='post', action = '/adminForm')
+        input(type='hidden', name='table', value='users')
+        input(type='submit', name='submit', value='Display Users')
+    p
+    form(method='post', action = '/adminForm')
+        input(type='hidden', name='table', value='purchased_tickets')
+        input(type='submit', name='submit', value='Display Tickets')
