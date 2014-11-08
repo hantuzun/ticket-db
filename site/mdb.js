@@ -29,18 +29,18 @@ function search(table, filters, callback) {
 	// if table = "events" or "artists" and filters = {"venue": "Mungyeong", "date": "2015-03-24"}
 	// when I query 'sql' on Sequel it returns the expected results
 
-	var sql = "SELECT DISTINCT ? \
+	var sql = "SELECT DISTINCT selection \
 	    FROM artist_loc \
 	    JOIN events ON artist_loc.event_id = events.event_id \
 	    JOIN artists ON artist_loc.artist_name = artists.name";
 	    
-	var events_selection = "events.event_id, events.event_name, events.venue, events.date, events.tickets_left, events.price_per_ticket, artists.name";
+	var events_selection = "events.event_id, events.event_name, events.venue, DATE_FORMAT(events.date,'%Y-%m-%d'), events.tickets_left, events.price_per_ticket, artists.name";
 	var artists_selection = "artists.name, artists.info";
 
 	if (table === "events") {
-		sql = sql.replace("?", events_selection);
+		sql = sql.replace("selection", events_selection);
 	} else if (table === "artists") {
-		sql = sql.replace("?", artists_selection);
+		sql = sql.replace("selection", artists_selection);
 	} else {
 		callback(false, err);
 	}
