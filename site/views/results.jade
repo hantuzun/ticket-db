@@ -26,18 +26,32 @@ html
             table.obj(id="table_id")
                 thead
                     tr
-                        for key in Object.keys(res[0])
-                            th #{key}
-                        th= ""
+                        - if (typeof res[0].event_id == "undefined") {
+                           th= "Name"
+                           th= "Info"
+                        - } else {
+                           th= "Event ID" 
+                           th= "Event Name"
+                           th= "Venue"
+                           th= "Date"
+                           th= "Available Tickets"
+                           th= "Price"
+                           th= "Artist"
+                           th= ""
+                        - }
                 tbody
                     for item in res
                         tr
                             for value in item
                                 td= value
-                            td
-                             button#btnPurchase(type='button', class="pbutton")  Purchase
-
-            script
-                $('#table_id').DataTable(); 
+                            - if (typeof res[0].event_id != "undefined")
+                                td
+                                    button#btnPurchase(type='button', class="pbutton") Purchase
+                - if (typeof res[0].event_id != "undefined")
+                    script
+                        $('#table_id').DataTable({"aoColumnDefs": [{ "bVisible": false, "aTargets": [0] }]}); 
+                - else 
+                    script
+                        $('#table_id').DataTable();
         - else 
             p No results found
