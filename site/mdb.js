@@ -44,7 +44,7 @@ function search(table, filters, callback) {
 		callback(false, err);
 	}
 
-	if (filters.length > 0) {
+	if (Object.keys(filters).length > 0) {
 		var array = []
 		for(var k in filters) {
 			array.push(k + " = \'" + filters[k] + "\'");
