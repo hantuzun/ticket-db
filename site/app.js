@@ -110,6 +110,7 @@ app.post('/purchaseForm', function(req, res) {
     
     var email = req.session.username;
 	if (p.ticket_id != undefined) {
+		console.log("I GET SENT T HERE");
 		mdb.cancelTicket(p.ticket_id, email, p.event_id, callback_2);
 	} else {
 		mdb.purchase(p.event_id, email, callback);
