@@ -14,12 +14,15 @@ router.get('/', function(req, res) {
 
 /* GET login page. */
 router.get('/login', function(req, res) {
- if(req.session.loginError=='true'){	
- res.render('login', { title: 'login', error:'true' });
-}
-else{
-	res.render('login', { title: 'login', error:'false' });
-}
+    //if (req.session.username != undefined) {
+        //res.redirect('/');
+    //} else {
+        if(req.session.loginError=='true'){	
+        res.render('login', { title: 'login', error:'true' });
+        }else{
+            res.render('login', { title: 'login', error:'false' });
+        }
+    //}
 });
 
 /* GET profile page*/
@@ -31,7 +34,6 @@ router.get('/userProfile',function(req,res){
 	else{
 		var callback = function(status, result) {
 			if (status == true) {
-				console.log("\n\nhere is what gets passed to res "+JSON.stringify(result));
 				res.render('userProfile',{res:result, username:(req.session.firstName)});
 			} else {
 				res.locals.reason = result;
@@ -58,7 +60,7 @@ router.get('/admin',function(req,res){
 	if(req.session.admin == true){
 		res.render('admin');
 	}else{
-		res.render('home');
+		res.redirect('/login');
 	}
 });
 

@@ -25,18 +25,26 @@ var adminEmail = 'admin';
 //SUBMIT LOGIN INFO
 app.post('/loginForm',function(req,res){
 	var p = req.body;
+    if (p.email == '' || p.password == '') {
+        res.redirect('/login');
+        return;
+    }
+    
 	req.session.username = p.email;
-	if(p.email == adminEmail){
+	if (p.email == adminEmail){
 		req.session.admin = true;
 	}else{
 		req.session.admin = false;
 	}
+
 	var queryString = 'SELECT firstname FROM users WHERE email ="'+p.email+'"';
 	mdb.queryDB(queryString,function(status,firstname){
-		req.session.firstname = firstname[0].firstname;
+        if (firstname.length != 0)
+            req.session.firstname = firstname[0].firstname;
 	});
+
 	var callback = function(status, result) {
-		if (status == true && result.length == 1) { 			
+		if (status == true && result.length == 1) { 	
 			res.redirect('/');
 		} else {
 			res.locals.reason = result;
@@ -57,7 +65,7 @@ app.post('/registrationForm',function(req,res){
 			res.render('home');
 		} else {
 			res.locals.reason = result;
-			res.send('reg failed' + result);  //TODO: alert
+			res.send('reg failed: \n' + result);  //TODO: alert
 		}
 	};
 
@@ -71,11 +79,10 @@ app.post('/searchForm', function(req, res){
     
 	var callback = function(status, result) {
 		if (status == true) {
-			//console.log("\n\n\nthe search results are "+JSON.stringify(result)+"\n\n");
 			res.render('results', {res: result, isEvents: eventsOrNot});
 		} else {
 			res.locals.reason = result;
-			res.send('search-failed' + result);
+			res.send('search-failed: \n' + result);
 		}
 	};
 	
@@ -95,7 +102,7 @@ app.post('/purchaseForm', function(req, res) {
 			res.send('purchase confirmed');
 		} else {
 			res.locals.reason = result;
-			res.send('purchase failed: ' + result);
+			res.send('purchase failed: \n' + result);
 		}
 	};
 	
@@ -104,7 +111,7 @@ app.post('/purchaseForm', function(req, res) {
 			res.send('cancellation complete');
 		} else {
 			res.locals.reason = result;
-			res.send('cancellation failed: ' + result);
+			res.send('cancellation failed: \n' + result);
 		}
 	};
     
@@ -116,7 +123,6 @@ app.post('/purchaseForm', function(req, res) {
             res.render('login');
             return;
         }
-        console.log(p.event_id);
 		mdb.purchase(p.event_id, email, callback);
 	}
 });
@@ -130,7 +136,7 @@ app.post('/adminForm', function(req, res) {
 			res.send('change made');
 		} else {
 			res.locals.reason = result;
-			res.send('request failed: ' + result);
+			res.send('request failed: \n' + result);
 		}
 	};
 
@@ -139,7 +145,7 @@ app.post('/adminForm', function(req, res) {
 			res.render('results', {res: result});
 		} else {
 			res.locals.reason = result;
-			res.send('request failed');
+			res.send('request failed: \n' + result);
 		}
 	};
 	
