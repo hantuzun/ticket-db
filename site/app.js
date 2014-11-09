@@ -104,15 +104,19 @@ app.post('/purchaseForm', function(req, res) {
 			res.send('cancellation complete');
 		} else {
 			res.locals.reason = result;
-			res.send('cancellation failed');
+			res.send('cancellation failed: ' + result);
 		}
 	};
     
-    var email = req.session.username;
 	if (p.ticket_id != undefined) {
-		console.log("I GET SENT T HERE");
-		mdb.cancelTicket(p.ticket_id, email, p.event_id, callback_2);
+		mdb.cancelTicket(p.ticket_id, p.event_id, callback_2);
 	} else {
+        var email = req.session.username;
+        if (email == undefined || email == null) {
+            res.render('login');
+            return;
+        }
+        console.log(p.event_id);
 		mdb.purchase(p.event_id, email, callback);
 	}
 });
@@ -126,7 +130,7 @@ app.post('/adminForm', function(req, res) {
 			res.send('change made');
 		} else {
 			res.locals.reason = result;
-			res.send('request failed');
+			res.send('request failed: ' + result);
 		}
 	};
 
@@ -142,14 +146,24 @@ app.post('/adminForm', function(req, res) {
 	if (p.action == undefined) {
 		mdb.showAll(p.table, callback_2);
 	} else {
-		var uORd = true ? (p.action == 'upd') : false;
-		mdb.modifyTable(p.table, uORd, p.keyCol, p.keyVal, p.changeCol, p.newVal, callback);
+		var act;
+        var bundle;
+        if (p.action == 'upd')
+            act = 1;
+        else if (p.action == 'del')
+            act = 2;
+        else if (p.action == 'ins')
+            act = 3;
+            if (p.table == 'artists')
+                bundle = [p.art_name, p.art_info];
+            else if (p.table == 'events')
+                bundle = [p.eid, p.ename, p.venue, p.date, p.size, p.num_tix, p.price];
+            else if (p.table == 'users')
+                bundle = [p.email, p.pass, p.fname, p.lname];
+		mdb.modifyTable(p.table, act, p.keyCol, p.keyVal, p.changeCol, p.newVal, bundle, callback);
 	}
 });
 
-function isAdmin(e, p) {
-	return (e == 'admin' && p == 'pass');
-}
 
 //catch 404
 app.use(function(req,res,next){
