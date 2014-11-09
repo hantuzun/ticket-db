@@ -8,8 +8,8 @@ var session = require('cookie-session');
 /* GET home page. */
 router.get('/', function(req, res) {
  var userFirstName = req.session.firstname;
-
-  res.render('home', {title: 'Events Database Prototype',firstname: userFirstName});
+ var admin = req.session.admin;
+  res.render('home', {title: 'Events Database Prototype',firstname: userFirstName,isAdmin : admin});
 });
 
 /* GET login page. */
@@ -55,7 +55,11 @@ router.get('/search',function(req,res){
 
 /*GET results page*/
 router.get('/admin',function(req,res){
-	res.render('admin');
+	if(req.session.admin == true){
+		res.render('admin');
+	}else{
+		res.render('home');
+	}
 });
 
 /*GET admin panel*/

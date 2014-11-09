@@ -19,24 +19,24 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(expressSession({secret:'secretKeyHash'}));
 app.use('/',routes);
-
+var adminEmail = 'admin';
 
 
 //SUBMIT LOGIN INFO
 app.post('/loginForm',function(req,res){
 	var p = req.body;
 	req.session.username = p.email;
+	if(p.email == adminEmail){
+		req.session.admin = true;
+	}else{
+		req.session.admin = false;
+	}
 	var queryString = 'SELECT firstname FROM users WHERE email ="'+p.email+'"';
 	mdb.queryDB(queryString,function(status,firstname){
 		req.session.firstname = firstname[0].firstname;
 	});
 	var callback = function(status, result) {
-		if (status == true && result.length == 1) { 
-			/*if (isAdmin(p.email, p.password)) { //TODO: REQ.SESSION DOESN'T EXIST YET
-				res.session.role = 'admin';
-			} else {
-				res.session.role = 'user';
-			}*/
+		if (status == true && result.length == 1) { 			
 			res.redirect('/');
 		} else {
 			res.locals.reason = result;

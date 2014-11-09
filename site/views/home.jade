@@ -19,6 +19,9 @@ html
 				br
 				p
 				button#btnSearch(type='button',onClick="window.location.href='/search'") Search
+			-if(isAdmin)
+				p
+				button#btnAdmin(type='button',onClick="window.location.href='/search'")	Admin Panel
 			
 
 
