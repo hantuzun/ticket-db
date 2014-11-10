@@ -59,17 +59,31 @@ app.post('/loginForm',function(req,res){
 //SUBMIT REGISTRATION INFO
 app.post('/registrationForm',function(req,res){
 	var p = req.body;
+	if(p.firstname == '' || p.lastname == '' || p.email =='' || p.password==''){
+		res.render('signUp',{errorMessage:'Please fill in all fields'});
+	}
+	else{
+		var emailCheck = 'SELECT * FROM users WHERE email = ?';
+		emailCheck = mysql.format(emailCheck, [p.email]);
+		mdb.queryDB(emailCheck,function(status,emailExistsResult){
+			console.log('here is the emailExists '+JSON.stringify(emailExistsResult));
+			if(emailExistsResult.length!=0){
+				res.render('signUp',{errorMessage:'Sorry email address already registered'});
+			}
+			else{
+					var callback = function(status, result) {
+			if (status == true) {
+				res.render('home');
+			} else {
+				res.locals.reason = result;
+				res.send('reg failed: \n' + result);  //TODO: alert
+			}
+		};
 
-	var callback = function(status, result) {
-		if (status == true) {
-			res.render('home');
-		} else {
-			res.locals.reason = result;
-			res.send('reg failed: \n' + result);  //TODO: alert
-		}
-	};
-
-	mdb.registerUser(p.email, p.password, p.firstname, p.lastname, callback);
+			mdb.registerUser(p.email, p.password, p.firstname, p.lastname, callback);
+			}
+		});
+	}
 });
 
 //SEARCH
@@ -99,7 +113,7 @@ app.post('/purchaseForm', function(req, res) {
 	var p = req.body;
 	var callback = function(status, result) {
 		if (status == true) {
-			res.send('purchase confirmed');
+			res.redirect('/userProfile');
 		} else {
 			res.locals.reason = result;
 			res.send('purchase failed: \n' + result);
@@ -108,7 +122,7 @@ app.post('/purchaseForm', function(req, res) {
 	
 	var callback_2 = function(status, result) {
 		if (status == true) {
-			res.send('cancellation complete');
+			res.redirect('/userProfile');
 		} else {
 			res.locals.reason = result;
 			res.send('cancellation failed: \n' + result);

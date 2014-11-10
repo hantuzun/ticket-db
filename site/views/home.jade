@@ -10,6 +10,8 @@ html
 				br
 				p
 				button#btnSearch(type='button',onClick="window.location.href='/userProfile'") View Profile
+				p
+				button#btnlogout(type='button',onClick="window.location.href='/logout'") logout
 			-else
 				h1 Welcome to #{title}
 				button#btnLogin(type='button',onClick="window.location.href='/login'") login
